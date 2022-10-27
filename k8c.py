@@ -1,8 +1,6 @@
 import argparse
 import sys
-from turtle import clear
 import requests
-import json
 class k8c(object):
     def __init__(self):
         parser = argparse.ArgumentParser(
@@ -32,28 +30,11 @@ The available k8c commands are:
         parser.add_argument('-min','--minimum', action='store',type=int,nargs=1,help='Minimum number of the replica to be created')
         parser.add_argument('-max','--maximum', action='store',type=int,nargs=1,help='Maximum number of replica to be created')
         args = parser.parse_args(sys.argv[2:])
-        print(vars(args))
         try:
-            res=requests.post('http://{}:{}'.format(args.hostname[0],args.port[0]), args)
-            print(res)
+            res=requests.post('http://{}:{}/'.format(args.hostname[0],args.port[0]), vars(args))
+            print(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
-
-
-    def updatePodCpu(self):
-        parser = argparse.ArgumentParser(
-            description='Download objects and refs from another repository')
-        # NOT prefixing the argument with -- means it's not optional
-        parser.add_argument('repository')
-        args = parser.parse_args(sys.argv[2:])
-        print ('Running git fetch, repository=%s %args.repository')
-    def updatePodReplicas(self):
-        parser = argparse.ArgumentParser(
-            description='Download objects and refs from another repository')
-        # NOT prefixing the argument with -- means it's not optional
-        parser.add_argument('repository')
-        args = parser.parse_args(sys.argv[2:])
-        print ('Running git fetch, repository=%s %args.repository')
 
 if __name__ == '__main__':
     k8c()
