@@ -1,3 +1,4 @@
+#!/c/ProgramData/Anaconda3/python
 import argparse
 import sys
 import requests
@@ -8,9 +9,11 @@ class k8c(object):
             usage='''k8c <command> [<args>]
 
 The available k8c commands are:
-   create   	    Creates a new deployment
-   updatecpu      	Updates the cpu size of any deployment
-   updatereplica	Updates the number of replication of any deployment 	
+   create               Creates a new deployment
+   updatecpu            Updates the cpu size of any deployment
+   updatereplica        Updates the number of replication of any deployment 
+   updatepcpu           Updates the pod cpu based on requests per second traffic
+   updatepsnr	        Updates the pos size and pod replica based on requests per seconf traffic
 ''')
         parser.add_argument('command', help='Subcommand to run')
         args = parser.parse_args(sys.argv[1:2])
@@ -62,6 +65,38 @@ The available k8c commands are:
         print(vars(args))
         try:
             res=requests.post('http://{}:{}/updatereplica'.format(args.hostname[0],args.port[0]), vars(args))
+            print(res.text)
+        except:
+            print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
+    def updatepsnr(self):
+        parser = argparse.ArgumentParser(usage='updatepsnr [options] deployment-name hostname port',
+        description='Updates the pod size and replica based on observed requests per sec on the deployment')
+        parser.add_argument('name', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
+        parser.add_argument('hostname', action='store',type=str,nargs=1,help='IP or domain name of the remote server')
+        parser.add_argument('port', action='store',type=int,nargs=1,default=5000,help='Port number on which the server side application is running')
+        parser.add_argument('-rps','--requests-per-second',action='store',type=int,nargs=1,help='Requests per second upon which the action is to be taken')
+        parser.add_argument('-ps','--pod-size', action='store',type=int,nargs=1,help='Size of pod by which it should be updated')
+        parser.add_argument('-min','--minimum', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
+        parser.add_argument('-max','--maximum', action='store',type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
+        args = parser.parse_args(sys.argv[2:])
+        print(vars(args))
+        try:
+            res=requests.post('http://{}:{}/updatepsnr'.format(args.hostname[0],args.port[0]), vars(args))
+            print(res.text)
+        except:
+            print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
+    def updatepcpu(self):
+        parser = argparse.ArgumentParser(usage='updatepcpu [options] deployment-name hostname port',
+        description='Updates the pod cpu size based on observed requests per sec on the deployment')
+        parser.add_argument('name', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
+        parser.add_argument('hostname', action='store',type=str,nargs=1,help='IP or domain name of the remote server')
+        parser.add_argument('port', action='store',type=int,nargs=1,default=5000,help='Port number on which the server side application is running')
+        parser.add_argument('-rps','--requests-per-second',action='store',type=int,nargs=1,help='Requests per second upon which the action is to be taken')
+        parser.add_argument('-cpu','--cpu-size', action='store',type=int,nargs=1,help='Size of cpu by which it should be updated')
+        args = parser.parse_args(sys.argv[2:])
+        print(vars(args))
+        try:
+            res=requests.post('http://{}:{}/updatepcpu'.format(args.hostname[0],args.port[0]), vars(args))
             print(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
