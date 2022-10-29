@@ -39,7 +39,6 @@ The available k8c commands are:
         parser = argparse.ArgumentParser(usage='updatecpu [options] deployment-name hostname port',
         description='Updates the cpu size of a deployment')
         parser.add_argument('name', action='store',type=str,nargs=1,help='Name of the deployment for which cpu size is to be updated')
-
         parser.add_argument('hostname', action='store',type=str,nargs=1,help='IP or domain name of the remote server')
         parser.add_argument('port', action='store',type=int,nargs=1,default=5000,help='Port number on which the server side application is running')
         parser.add_argument('-cpu','--cpu-size', action='store',type=int,nargs=1,default=80,help='Size of the cpu in a range of 1 to 100')
@@ -57,8 +56,8 @@ The available k8c commands are:
         parser.add_argument('hostname', action='store',type=str,nargs=1,help='IP or domain name of the remote server')
         parser.add_argument('port', action='store',type=int,nargs=1,default=5000,help='Port number on which the server side application is running')
         replica=parser.add_mutually_exclusive_group()
-        replica.add_argument('-min','--minimum', action='store',type=int,nargs=1,default=3,help='Replication number to be updated in the minimum section of the hpa')
-        replica.add_argument('-max','--maximum', action='store',type=int,nargs=1,default=3,help='Replication number to be updated in the maximum section of the hpa')
+        replica.add_argument('-min','--minimum', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
+        replica.add_argument('-max','--maximum', action='store',type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
         args = parser.parse_args(sys.argv[2:])
         print(vars(args))
         try:
