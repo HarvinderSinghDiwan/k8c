@@ -50,7 +50,7 @@ The available k8c commands are:
         args = parser.parse_args(sys.argv[2:])
         try:
             res=requests.post('http://{}:{}/create'.format(H,P), vars(args))
-            print(res.text)
+            pprint(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
     def updatecpu(self):
@@ -62,7 +62,7 @@ The available k8c commands are:
         args = parser.parse_args(sys.argv[2:])
         try:
             res=requests.post('http://{}:{}/updatecpu'.format(H,P), vars(args))
-            print(res.text)
+            pprint(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
     def updatereplica(self):
@@ -78,7 +78,7 @@ The available k8c commands are:
         print(vars(args))
         try:
             res=requests.post('http://{}:{}/updatereplica'.format(H,P), vars(args))
-            print(res.text)
+            pprint(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
     def updatepsnr(self):
@@ -94,7 +94,7 @@ The available k8c commands are:
         print(vars(args))
         try:
             res=requests.post('http://{}:{}/updatepsnr'.format(H,P), vars(args))
-            print(res.text)
+            pprint(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
     def updatepcpu(self):
@@ -108,7 +108,7 @@ The available k8c commands are:
         print(vars(args))
         try:
             res=requests.post('http://{}:{}/updatepcpu'.format(H,P), vars(args))
-            print(res.text)
+            pprint(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
 
