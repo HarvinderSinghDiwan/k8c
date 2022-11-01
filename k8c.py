@@ -161,5 +161,3 @@ if __name__ == '__main__':
             k8c()
         else:
             exit('Thanks .......... But unless you configure, i wil not allow to to use me. Either configure using the client program or manually make entries of HOSTNAME and PORT variable in the .k8config file in the current directory.')
-
-
