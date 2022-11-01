@@ -1,7 +1,23 @@
 #!/c/ProgramData/Anaconda3/python
 import argparse
 import sys
+import os
 import requests
+def config():
+    if ".k8config" in os.listdir():
+        isfound=[False,False]
+        with open(".k8config","rb") as file:
+            metadata=[i.decode().strip() for i in file]
+            for i in metadata:
+                data=i.split('=')
+                if data[0]=='hostname':
+                    isfound[0]=True
+                elif data[0]=='port':
+                    isfound[1]=True
+       
+                    
+            print( metadata[0])
+    return False
 class k8c(object):
     def __init__(self):
         parser = argparse.ArgumentParser(
@@ -101,5 +117,54 @@ The available k8c commands are:
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
 
+
+def config():
+    global H
+    global P
+    isfound=[False,False]
+    if ".k8config" in os.listdir():
+        if os.stat("./.k8config").st_size == 0:
+            return '''The Configuration file is Empty.\nPlease configure you application first with HOSTNAME and PORT variable refering to hostname and portnuimber of the server.'''
+        else:
+            with open(".k8config","rb") as file:
+                    metadata=[i.decode().strip() for i in file]
+                    for i in metadata:
+                        data=i.split('=')
+                        if data[0].upper()=='HOSTNAME':
+                            isfound[0]=True
+                            H=data[1]
+                        elif data[0].upper()=='PORT':
+                            isfound[1]=True
+                            P=data[1]
+                        else:
+                            return '''Alert!!!!!! Configuration corrupted.\nThe configuration file does not contain HOSTNAME and PORT variable.\nPlease configure you Application.'''
+
+    if isfound[0]==True and isfound[1]==True:
+        return True
+    else:
+        return '''The configuration file does not contain HOSTNAME and PORT variable.\nPlease configure you Application.'''
+
+
 if __name__ == '__main__':
-    k8c()
+
+    isConfigured=config()
+    if isConfigured is True:
+        k8c()
+    else:
+        global H
+        global P
+        print("\n"*2)
+        print(isConfigured)
+        print("\n")
+        res=input("Do You Want To Configure Now? Press 'y' or 'yes' to continue else press 'n'or 'no' to EXIT :   ")
+        if res=='y' or res=='yes':
+            H=HOSTNAME=input("Please enter server's ip or fqdn . Eg: 13.26.128.30 or api.server.example.com :   ")
+            P=PORT=input("Please enter the port number of the server on the the receiver program is running. Eg: 8080 :   ")
+            with open(".k8config","wb") as file:
+                file.write(str('HOSTNAME='+HOSTNAME+"\n"+"PORT="+PORT).encode())
+            print("Configuration successful. Please proceed with ahead.")
+            k8c()
+        else:
+            exit('Thanks .......... But unless you configure, i wil not allow to to use me. Either configure using the client program or manually make entries of HOSTNAME and PORT variable in the .k8config file in the current directory.')
+
+
