@@ -109,3 +109,26 @@ val={'app': 'mydep', 'image': 'myname','pod_size':'small','cport':80,'protocol':
 print(mkdir("newapp/frontend"))
 print(mkfiles("newapp/frontend",val))
 
+
+def updateCPUThreshold(path,values):
+    try:
+        with open("default/frontend/hpa.yml","rb") as file:
+            data=file.read()
+            data = data.replace('targetCPUUtilizationPercentage:'.encode(), 'targetCPUUtilizationPercentage: {} #'.format().encode())
+
+        with open("default/frontend/hpa.yml","wb") as file:
+            file.write(data)
+        return True
+    except:
+        return False
+def hpaReplicas(path,values):
+    try:
+        with open("default/frontend/hpa.yml","rb") as file:
+            data=file.read()
+            data = data.replace('minReplicas:'.encode(), 'minReplicas: {} #'.format().encode())
+            data = data.replace('maxReplicas:'.encode(), 'maxReplicas: {} #'.format().encode())
+        with open("default/frontend/hpa.yml","wb") as file:
+            file.write(data)
+        return True
+    except:
+        return False
