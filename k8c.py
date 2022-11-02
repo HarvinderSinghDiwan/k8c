@@ -3,7 +3,8 @@ import argparse
 import sys
 import os
 import requests
-import pprint
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 def config():
     if ".k8config" in os.listdir():
         isfound=[False,False]
@@ -49,10 +50,10 @@ The available k8c commands are:
         parser.add_argument('-min','--minimum', action='store',type=int,nargs=1,default=3,help='Minimum number of the replica to be created')
         parser.add_argument('-max','--maximum', action='store',type=int,nargs=1,default=3,help='Maximum number of replica to be created')
         args = parser.parse_args(sys.argv[2:])
-        print(vars(args))
+        print(type(vars(args)))
         try:
-            res=requests.post('http://{}:{}/create'.format(H,P), vars(args))
-            pprint(res.text)
+            res=requests.post('https://{}:{}/create'.format(H,P), vars(args),verify=False)
+            print(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
     def updatecpu(self):
@@ -60,10 +61,10 @@ The available k8c commands are:
         description='Updates the cpu size of a deployment')
         parser.add_argument('name', action='store',type=str,nargs=1,help='Name of the deployment for which cpu size is to be updated')
 
-        parser.add_argument('-cpu','--cpu-size', action='store',type=int,nargs=1,default=80,help='Size of the cpu in a range of 1 to 100')
+        parser.add_argument('-cpu','--cpu-threshold', action='store',type=int,nargs=1,default=80,help='Size of the cpu in a range of 1 to 100')
         args = parser.parse_args(sys.argv[2:])
         try:
-            res=requests.post('http://{}:{}/updatecpu'.format(H,P), vars(args))
+            res=requests.post('https://{}:{}/updatecpu'.format(H,P), vars(args))
             pprint(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
@@ -71,15 +72,14 @@ The available k8c commands are:
         parser = argparse.ArgumentParser(usage='updatereplica [options] deployment-name hostname port',
         description='Updates the cpu size of a deployment')
         parser.add_argument('name', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
-
-
         replica=parser.add_mutually_exclusive_group()
         replica.add_argument('-min','--minimum', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
         replica.add_argument('-max','--maximum', action='store',type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
         args = parser.parse_args(sys.argv[2:])
         print(vars(args))
         try:
-            res=requests.post('http://{}:{}/updatereplica'.format(H,P), vars(args))
+           
+            res=requests.post('https://{}:{}/updatereplica'.format(H,P), vars(args))
             pprint(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
@@ -87,7 +87,6 @@ The available k8c commands are:
         parser = argparse.ArgumentParser(usage='updatepsnr [options] deployment-name hostname port',
         description='Updates the pod size and replica based on observed requests per sec on the deployment')
         parser.add_argument('name', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
-
         parser.add_argument('-rps','--requests-per-second',action='store',type=int,nargs=1,help='Requests per second upon which the action is to be taken')
         parser.add_argument('-ps','--pod-size', action='store',type=int,nargs=1,help='Size of pod by which it should be updated')
         parser.add_argument('-min','--minimum', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
@@ -95,26 +94,24 @@ The available k8c commands are:
         args = parser.parse_args(sys.argv[2:])
         print(vars(args))
         try:
-            res=requests.post('http://{}:{}/updatepsnr'.format(H,P), vars(args))
+            res=requests.post('https://{}:{}/updatepsnr'.format(H,P), vars(args))
             pprint(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
     def updatepcpu(self):
-        parser = argparse.ArgumentParser(usage='updatepcpu [options] deployment-name hostname port',
+        parser = argparse.ArgumentParser(usage='updatepcpu [options] app-name namespace-name',
         description='Updates the pod cpu size based on observed requests per sec on the deployment')
-        parser.add_argument('name', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
-
+        parser.add_argument('app', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
+        parser.add_argument('ns', action='store',type=str,nargs=1,help='Name of the namespace in which the app is running')
         parser.add_argument('-rps','--requests-per-second',action='store',type=int,nargs=1,help='Requests per second upon which the action is to be taken')
         parser.add_argument('-cpu','--cpu-size', action='store',type=int,nargs=1,help='Size of cpu by which it should be updated')
         args = parser.parse_args(sys.argv[2:])
         print(vars(args))
         try:
-            res=requests.post('http://{}:{}/updatepcpu'.format(H,P), vars(args))
+            res=requests.post('https://{}:{}/updatepcpu'.format(H,P), vars(args))
             pprint(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
-
-
 def config():
     global H
     global P

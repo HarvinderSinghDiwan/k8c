@@ -1,0 +1,4 @@
+test.py
+.k8*
+*.config
+.vscode

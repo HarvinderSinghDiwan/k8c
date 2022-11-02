@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import subprocess as sp
 import os
-from unicodedata import name
 ns="""apiVersion: v1
 kind: Namespace
 metadata:
@@ -72,6 +71,24 @@ def mkdir(path):
     with open(path+"/namespace.yml","wb") as file:
         file.write(str(ns.format(path.split('/')[0],values.get('app'),
         values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
+    with open(path+"/namespace.yml","wb") as file:
+        file.write(str(ns.format(path.split('/')[0],values.get('app'),
+        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
+    with open(path+"/namespace.yml","wb") as file:
+        file.write(str(ns.format(path.split('/')[0],values.get('app'),
+        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
+    with open(path+"/namespace.yml","wb") as file:
+        file.write(str(ns.format(path.split('/')[0],values.get('app'),
+        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
+    with open(path+"/namespace.yml","wb") as file:
+        file.write(str(ns.format(path.split('/')[0],values.get('app'),
+        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
+    with open(path+"/namespace.yml","wb") as file:
+        file.write(str(ns.format(path.split('/')[0],values.get('app'),
+        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
+    with open(path+"/namespace.yml","wb") as file:
+        file.write(str(ns.format(path.split('/')[0],values.get('app'),
+        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
 def mkfiles(path,values):
     lcpu=None
     rcpu=None
@@ -105,9 +122,7 @@ def mkfiles(path,values):
         return True
     except:
         return False
-val={'app': 'mydep', 'image': 'myname','pod_size':'small','cport':80,'protocol':'TCP' ,'service_type':'nodeport','cpu_threshold': 80, 'minimum_replica': 3, 'maximum_replica': 3}
-print(mkdir("newapp/frontend"))
-print(mkfiles("newapp/frontend",val))
+
 
 
 def updateCPUThreshold(path,values):
@@ -121,7 +136,7 @@ def updateCPUThreshold(path,values):
         return True
     except:
         return False
-def hpaReplicas(path,values):
+def updateHPAReplicas(path,values):
     try:
         with open("default/frontend/hpa.yml","rb") as file:
             data=file.read()
@@ -132,3 +147,50 @@ def hpaReplicas(path,values):
         return True
     except:
         return False
+############### Application Programming Interface ######################
+from flask import Flask ,request, make_response, jsonify
+from flask_cors import CORS
+import subprocess as sp
+from time import perf_counter
+app = Flask(__name__)
+CORS(app)
+@app.route('/create',methods=["POST"])
+def create():
+    start=perf_counter()
+    fdict=request.form.to_dict()
+    path=fdict['namespace']+"/"+fdict['app']
+    try:
+        if mkdir(path):
+            if mkfiles(path,fdict):
+                x,y=sp.getstatusoutput("echo 'kubectl apply -f {path}/' > {path}/result.txt")
+                if x==0:
+                    return make_response(y,{'time_taken':start-perf_counter()})
+    except:
+        return "Fatal Error Occured. Please contact your Developer\n"+"time_taken={}".format(start-perf_counter())
+@app.route('/updatecpu',methods=["POST"])
+def updatecpu():
+    start=perf_counter()
+    fdict=request.form.to_dict()
+    path=fdict['namespace']+"/"+fdict['app']
+    try:
+        if mkdir(path):
+            if updateCPUThreshold(path,fdict):
+                x,y=sp.getstatusoutput("echo 'kubectl apply -f {path}/' > {path}/result.txt")
+                if x==0:
+                    return make_response(y,{'time_taken':start-perf_counter()})
+    except:
+        return "Fatal Error Occured. Please contact your Developer\n"+"time_taken={}".format(start-perf_counter()) 
+@app.route('/updatereplica',methods=["POST"])
+def updatereplica():
+    start=perf_counter()
+    fdict=request.form.to_dict()
+    path=fdict['namespace']+"/"+fdict['app']
+    try:
+        if mkdir(path):
+            if updateHPAReplicas(path,fdict):
+                x,y=sp.getstatusoutput("echo 'kubectl apply -f {path}/' > {path}/result.txt")
+                if x==0:
+                    return make_response(y,{'time_taken':start-perf_counter()})
+    except:
+        return "Fatal Error Occured. Please contact your Developer\n"+"time_taken={}".format(start-perf_counter())
+app.run(debug=False,host="0.0.0.0",port="5000",ssl_context="adhoc")
