@@ -89,22 +89,22 @@ def mkfiles(path,values):
         rcpu='400m'
         rmem='200Mi'
 
-    #try:
-    with open(path+"/namespace.yml","wb") as file:
-        file.write(str(ns.format(path.split('/')[0],values.get('app'),
-        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
-    with open(path+"/deployment.yml","wb") as file:
-        file.write(str(deployment.format(path.split('/')[0],values.get('app'),values.get('app'),
-        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
-    with open(path+"/hpa.yml","wb") as file:
-        file.write(str(hpa.format(values.get('app'),values.get('minimum_replica'),
-        values.get('maximum_replica'),values.get('app'),values.get('cpu_threshold'))).encode())
-    with open(path+"/service.yml","wb") as file:
-        file.write(str(svc.format(values.get('app'),values.get('service_type'),
-        values.get('cport'),values.get('cport'),values.get('protocol'))).encode())
-    return True
-    #except:
-    #    return False
+    try:
+        with open(path+"/namespace.yml","wb") as file:
+            file.write(str(ns.format(path.split('/')[0],values.get('app'),
+            values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
+        with open(path+"/deployment.yml","wb") as file:
+            file.write(str(deployment.format(path.split('/')[0],values.get('app'),values.get('app'),
+            values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
+        with open(path+"/hpa.yml","wb") as file:
+            file.write(str(hpa.format(values.get('app'),values.get('minimum_replica'),
+            values.get('maximum_replica'),values.get('app'),values.get('cpu_threshold'))).encode())
+        with open(path+"/service.yml","wb") as file:
+            file.write(str(svc.format(values.get('app'),values.get('service_type'),
+            values.get('cport'),values.get('cport'),values.get('protocol'))).encode())
+        return True
+    except:
+        return False
 val={'app': 'mydep', 'image': 'myname','pod_size':'small','cport':80,'protocol':'TCP' ,'service_type':'nodeport','cpu_threshold': 80, 'minimum_replica': 3, 'maximum_replica': 3}
 print(mkdir("newapp/frontend"))
 print(mkfiles("newapp/frontend",val))
