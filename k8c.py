@@ -3,6 +3,7 @@ import argparse
 import sys
 import os
 import requests
+import pprint
 def config():
     if ".k8config" in os.listdir():
         isfound=[False,False]
@@ -41,13 +42,14 @@ The available k8c commands are:
     def create(self):
         parser = argparse.ArgumentParser(usage='create [options] deployment-name hostname port',
             description='Creates a new deployment with given requirements on demand')
-        parser.add_argument('name', action='store',type=str,nargs=1,help='Name of the deployment to be created')
+        parser.add_argument('app', action='store',type=str,nargs=1,help='Name of the application deployment to be created')
         parser.add_argument('image', action='store',type=str,nargs=1,help='Container image repository url ')
 
-        parser.add_argument('-cpu','--cpu-size', action='store',type=int,nargs=1,default=80,help='Size of the cpu in a range of 1 to 100')
+        parser.add_argument('-cpu','--cpu-threshold', action='store',type=int,nargs=1,default=80,help='Size of the cpu in a range of 1 to 100')
         parser.add_argument('-min','--minimum', action='store',type=int,nargs=1,default=3,help='Minimum number of the replica to be created')
         parser.add_argument('-max','--maximum', action='store',type=int,nargs=1,default=3,help='Maximum number of replica to be created')
         args = parser.parse_args(sys.argv[2:])
+        print(vars(args))
         try:
             res=requests.post('http://{}:{}/create'.format(H,P), vars(args))
             pprint(res.text)
