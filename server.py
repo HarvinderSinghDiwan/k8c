@@ -40,13 +40,13 @@ svc="""
 apiVersion: v1
 kind: Service
 metadata:
-    name: {}-service     #custom-nginx-service1
+    name: {}-service   
 spec:
     type: {}
     ports:
-        - port: {} #80
-          targetPort: {}  #80
-          protocol: {} #TCP
+        - port: {}
+          targetPort: {}
+          protocol: {}
 
 """
 
