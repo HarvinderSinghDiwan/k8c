@@ -93,7 +93,7 @@ def mkfiles(path,values):
     return True
     #except:
     #    return False
-val={'app': 'mydep', 'image': 'myname','pod_size':'small','cport':80,'protocol':'tcp' ,'service_type':'nodeport','cpu_threshold': 80, 'minimum_replica': 3, 'maximum_replica': 3}
+val={'app': 'mydep', 'image': 'myname','pod_size':'small','cport':80,'protocol':'TCP' ,'service_type':'nodeport','cpu_threshold': 80, 'minimum_replica': 3, 'maximum_replica': 3}
 print(mkdir("default/frontend"))
 print(mkfiles("default/frontend",val))
 
