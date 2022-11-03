@@ -3,6 +3,7 @@ import argparse
 import sys
 import os
 import requests
+import logging
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 def config():
@@ -52,47 +53,50 @@ The available k8c commands are:
         args = parser.parse_args(sys.argv[2:])
         print(type(vars(args)))
         try:
-            res=requests.post('https://{}:{}/create'.format(H,P), vars(args),verify=False)
+            res=requests.post('https://{}:{}/create'.format(H,P), args,verify=False)
             print(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
     def updatecpu(self):
         parser = argparse.ArgumentParser(usage='updatecpu [options] deployment-name hostname port',
         description='Updates the cpu size of a deployment')
-        parser.add_argument('name', action='store',type=str,nargs=1,help='Name of the deployment for which cpu size is to be updated')
+        parser.add_argument('name', action='store',type=int,nargs=1,help='Name of the deployment for which cpu size is to be updated')
 
         parser.add_argument('-cpu','--cpu-threshold', action='store',type=int,nargs=1,default=80,help='Size of the cpu in a range of 1 to 100')
         args = parser.parse_args(sys.argv[2:])
         try:
-            res=requests.post('https://{}:{}/updatecpu'.format(H,P), vars(args))
-            pprint(res.text)
+            res=requests.post('https://{}:{}/updatecpu'.format(H,P), args)
+            print(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
     def updatereplica(self):
         parser = argparse.ArgumentParser(usage='updatereplica [options] deployment-name hostname port',
         description='Updates the cpu size of a deployment')
-        parser.add_argument('name', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
-        replica=parser.add_mutually_exclusive_group()
-        replica.add_argument('-min','--minimum', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
-        replica.add_argument('-max','--maximum', action='store',type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
-        args = parser.parse_args(sys.argv[2:])
-        print(vars(args))
-        try:
-           
-            res=requests.post('https://{}:{}/updatereplica'.format(H,P), vars(args))
-            pprint(res.text)
-        except:
-            print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
+        parser.add_argument('app', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
+        parser.add_argument('namespace', action='store',type=str,nargs=1,help='Name of the namespace unedr which the deployment is running')
+        parser.add_argument('-min','--minimum-replica', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
+        parser.add_argument('-max','--maximum-replica', action='store',type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
+        args = vars(parser.parse_args(sys.argv[2:]))
+        if args['maximum_replica'] is not None and args['minimum_replica'] is not None and args['minimum_replica'][0] > args['maximum_replica'][0]:
+            logging.error("Minimum number of replica must always be less than or equal to Maximum number of replica")
+            exit()
+        for i in args:
+            try:
+                args.update({i:args[i][0]})
+            except:
+                pass
+        res=requests.post('https://{}:{}/updatereplica'.format(H,P), args,verify=False)
+        print(res.text)
     def updatepsnr(self):
         parser = argparse.ArgumentParser(usage='updatepsnr [options] deployment-name hostname port',
         description='Updates the pod size and replica based on observed requests per sec on the deployment')
         parser.add_argument('name', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
-        parser.add_argument('-rps','--requests-per-second',action='store',type=int,nargs=1,help='Requests per second upon which the action is to be taken')
+        parser.add_argument('-rps','--requests-per-second',action='store',type=str,nargs=1,help='Requests per second upon which the action is to be taken')
         parser.add_argument('-ps','--pod-size', action='store',type=int,nargs=1,help='Size of pod by which it should be updated')
         parser.add_argument('-min','--minimum', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
         parser.add_argument('-max','--maximum', action='store',type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
         args = parser.parse_args(sys.argv[2:])
-        print(vars(args))
+
         try:
             res=requests.post('https://{}:{}/updatepsnr'.format(H,P), vars(args))
             pprint(res.text)
