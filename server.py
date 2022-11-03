@@ -197,11 +197,12 @@ def updateCPUThreshold(path,values):
             file.write(data)
         return True
     except:
-        return False
+        return False['minimum_replica']
 def updateHPAReplicas(path,values):
-    if path.split('/')[0] not in os.listdir:
+    __=path.split('/')
+    if __[0] not in os.listdir():
         return "Namespace not found. Please check your Namespace name again."
-    if path.split('/')[1] not in os.listdir:
+    if __[1] not in os.listdir(__[0]+'/'):
         return "Application not found. Please check your Application name again."
     try:
         with open(path+"/hpa.yml","rb") as file:
@@ -210,13 +211,11 @@ def updateHPAReplicas(path,values):
                 data = data.replace('minReplicas:'.encode(), str('minReplicas: {} #'.format(values['minimum_replica'])).encode())
             if values['minimum_replica'] is not None:
                 data = data.replace('maxReplicas:'.encode(), 'maxReplicas: {} #'.format(values['maximum_replica']).encode())
-            print('i am here')
         with open(path+"/hpa.yml","wb") as file:
             file.write(data)
-            print('iam here')
-        return True
+        return "True"
     except:
-        return False
+        return "Failure: Your namespce directory and application directory is there in the server, but there is no file named 'hpa.yml'. Please contact your administrator."
 ############### Application Programming Interface ######################
 from flask import Flask ,request, make_response, jsonify
 from flask_cors import CORS
@@ -234,9 +233,9 @@ def create():
             if mkfiles(path,fdict):
                 x,y=sp.getstatusoutput("echo 'kubectl apply -f {path}/' > {path}/result.txt")
                 if x==0:
-                    return make_response(y,{'time_taken':start-perf_counter()})
+                    return make_response(y,{'Time_taken:':start-perf_counter()})
     except:
-        return "Fatal Error Occured. Please contact your Developer\n"+"time_taken={}".format(start-perf_counter())
+        return "Fatal Error Occured. Please contact your Developer\n"+"Time_taken:={}".format(start-perf_counter())
 @app.route('/updatecpu',methods=["POST"])
 def updatecpu():
     start=perf_counter()
@@ -247,27 +246,25 @@ def updatecpu():
             if updateCPUThreshold(path,fdict):
                 x,y=sp.getstatusoutput("echo 'kubectl apply -f {path}/' > {path}/result.txt")
                 if x==0:
-                    return make_response(y,{'time_taken':start-perf_counter()})
+                    return make_response(y,{'Time_taken:':start-perf_counter()})
     except:
-        return "Fatal Error Occured. Please contact your Developer\n"+"time_taken={}".format(start-perf_counter()) 
+        return "Unknown Error Occured. Please contact your Developer\n"+"Time_taken:={}".format(start-perf_counter()) 
 @app.route('/updatereplica',methods=["POST"])
 def updatereplica():
     start=perf_counter()
     fdict=request.form.to_dict()
     path=fdict['namespace']+"/"+fdict['app']
-    try:
-        if mkdir(path):
-            if updateHPAReplicas(path,fdict) is True:
-                x,y=sp.getstatusoutput("echo 'kubectl apply -f {}/' > {}/result.txt".format(path,path))
-                if x==0:
-                    return y+" ,'time_taken':{}".format(perf_counter()-start)+" nanoseconds"
-                else:
-                    return "Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin" 
+    res=updateHPAReplicas(path,fdict)
+    try: 
+        if  res=="True":
+            x,y=sp.getstatusoutput("echo 'kubectl apply -f {}/' > {}/result.txt".format(path,path))
+            if x==0:
+                return y+"\nTime_taken:':{}".format(perf_counter()-start)+" nanoseconds"
             else:
-                return "Khitput"
+                return "Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin"+"\nTime_taken:':{}".format(perf_counter()-start)+" nanoseconds" 
         else:
-            return "NO NAMESPACE AND APPLICATION FOUND"
+            return res
     except:
-        return "Fatal Error Occured. Please contact your Developer\n"+"time_taken={}".format(start-perf_counter())+" nanoseconds"
+        return "Unkown Error Occured. Please contact your Developer"+"\nTime_taken:':{}".format(perf_counter()-start)+" nanoseconds"
 
 app.run(debug=False,host="0.0.0.0",port="5000",ssl_context="adhoc")
