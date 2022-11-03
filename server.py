@@ -60,10 +60,8 @@ def mkdir(path):
     try:
         if namespace not in os.listdir():
             os.mkdir(namespace)
-            print(os.listdir(namespace))
         if app not in os.listdir(namespace):
             os.mkdir(namespace+"/"+app)
-            print(os.listdir(namespace))
         return True
     except:
         return False
@@ -89,6 +87,8 @@ def mkdir(path):
     with open(path+"/namespace.yml","wb") as file:
         file.write(str(ns.format(path.split('/')[0],values.get('app'),
         values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
+        newvar=vars(args).update({'app':vars(args)['app'][0]})
+        print(newvar)
 def mkfiles(path,values):
     lcpu=None
     rcpu=None
@@ -148,7 +148,7 @@ def config():
         return True
     else:
         return '''The configuration file does not contain HOSTNAME and PORT variable.\nPlease configure you Application.'''
-    isConfigured=config()
+    """isConfigured=config()
     if isConfigured is True:
         k8c()
     else:
@@ -184,7 +184,7 @@ def config():
             #resp.headers["Set-Cookie"] = "myfirstcookie=somecookievalue"
             resp.set_cookie('userID', 'kooooooooooooooooooo')
             return resp
-        app.run(host="0.0.0.0",port="5000",ssl_context="adhoc")
+        app.run(host="0.0.0.0",port="5000",ssl_context="adhoc")"""
 
 
 def updateCPUThreshold(path,values):
@@ -199,13 +199,21 @@ def updateCPUThreshold(path,values):
     except:
         return False
 def updateHPAReplicas(path,values):
+    if path.split('/')[0] not in os.listdir:
+        return "Namespace not found. Please check your Namespace name again."
+    if path.split('/')[1] not in os.listdir:
+        return "Application not found. Please check your Application name again."
     try:
-        with open("default/frontend/hpa.yml","rb") as file:
+        with open(path+"/hpa.yml","rb") as file:
             data=file.read()
-            data = data.replace('minReplicas:'.encode(), 'minReplicas: {} #'.format().encode())
-            data = data.replace('maxReplicas:'.encode(), 'maxReplicas: {} #'.format().encode())
-        with open("default/frontend/hpa.yml","wb") as file:
+            if values['minimum_replica'] is not None:
+                data = data.replace('minReplicas:'.encode(), str('minReplicas: {} #'.format(values['minimum_replica'])).encode())
+            if values['minimum_replica'] is not None:
+                data = data.replace('maxReplicas:'.encode(), 'maxReplicas: {} #'.format(values['maximum_replica']).encode())
+            print('i am here')
+        with open(path+"/hpa.yml","wb") as file:
             file.write(data)
+            print('iam here')
         return True
     except:
         return False
@@ -249,10 +257,17 @@ def updatereplica():
     path=fdict['namespace']+"/"+fdict['app']
     try:
         if mkdir(path):
-            if updateHPAReplicas(path,fdict):
-                x,y=sp.getstatusoutput("echo 'kubectl apply -f {path}/' > {path}/result.txt")
+            if updateHPAReplicas(path,fdict) is True:
+                x,y=sp.getstatusoutput("echo 'kubectl apply -f {}/' > {}/result.txt".format(path,path))
                 if x==0:
-                    return make_response(y,{'time_taken':start-perf_counter()})
+                    return y+" ,'time_taken':{}".format(perf_counter()-start)+" nanoseconds"
+                else:
+                    return "Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin" 
+            else:
+                return "Khitput"
+        else:
+            return "NO NAMESPACE AND APPLICATION FOUND"
     except:
-        return "Fatal Error Occured. Please contact your Developer\n"+"time_taken={}".format(start-perf_counter())
+        return "Fatal Error Occured. Please contact your Developer\n"+"time_taken={}".format(start-perf_counter())+" nanoseconds"
+
 app.run(debug=False,host="0.0.0.0",port="5000",ssl_context="adhoc")
