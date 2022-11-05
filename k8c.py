@@ -42,23 +42,35 @@ The available k8c commands are:
             exit(1)
         getattr(self, args.command)()
     def create(self):
-        parser = argparse.ArgumentParser(usage='create [options] deployment-name hostname port',
-            description='Creates a new deployment with given requirements on demand')
-        parser.add_argument('app', action='store',type=str,nargs=1,help='Name of the application deployment to be created')
-        parser.add_argument('image', action='store',type=str,nargs=1,help='Container image repository url ')
-
-        parser.add_argument('-cpu','--cpu-threshold', action='store',type=int,nargs=1,default=80,help='Size of the cpu in a range of 1 to 100')
-        parser.add_argument('-min','--minimum', action='store',type=int,nargs=1,default=3,help='Minimum number of the replica to be created')
-        parser.add_argument('-max','--maximum', action='store',type=int,nargs=1,default=3,help='Maximum number of replica to be created')
-        args = parser.parse_args(sys.argv[2:])
-        print(type(vars(args)))
-        try:
-            res=requests.post('https://{}:{}/create'.format(H,P), args,verify=False)
-            print(res.text)
-        except:
-            print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
+        parser = argparse.ArgumentParser(usage='create [options] app-name namespace-name',
+        description='Creates a new deployment with given requirements on demand')
+        parser.add_argument('app', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
+        parser.add_argument('namespace', action='store',type=str,nargs=1,help='Name of the namespace unedr which the deployment is running')
+        parser.add_argument('image', action='store',type=str,nargs=1,help="The repository URL from the container's image is to be fetched")
+        parser.add_argument('pod-size', action='store',type=str,nargs=1,choices=['small','medium','large'],help='It specifies cpu and ram serources for limits and requests quotas that the pod will be allocated during the creation of the deployment.')
+        parser.add_argument('cport' action='store',type=int,nargs=1,default=None,help='The port number of the container to be exposed.')
+        parser.add_argument('protocol' action='store',type=str,nargs=1,default=None,help='The protocol that the port will be opened on')
+        parser.add_argument('-cpu','--cpu-threshold', action='store',default=80,type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
+        parser.add_argument('-min','--minimum-replica', action='store',default=3,type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
+        parser.add_argument('-max','--maximum-replica', action='store',default=3,type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
+        parser.add_argument('-svc','--service-type' action='store',type=str,default='ClusterIP',choices=['ClusterIP','NodePort','LoadBalancer','Headless'],nargs=1,default=None,help='The type of the service that is to be created along with the deployment.')
+        
+        args = vars(parser.parse_args(sys.argv[2:]))
+        if args['cpu_threshold'] is not None and args['cpu_threshold'][0]< 0 :
+            logging.error("CPU Threshold percentage must be greater than 0 (Zero). Please correct and try again")
+            exit()
+        if args['cpu_threshold'] is not None and args['cpu_threshold'][0] > 100:
+            logging.error("CPU Threshold percentage must be less than 100 (Hundred). Please correct and try again")
+            exit()
+        for i in args:
+            try:
+                args.update({i:args[i][0]})
+            except:
+                pass
+        res=requests.post('https://{}:{}/updatecpu'.format(H,P), args,verify=False)
+        print(res.text)
     def updatecpu(self):
-        parser = argparse.ArgumentParser(usage='updatecpu [options] deployment-name app-name namespace-name',
+        parser = argparse.ArgumentParser(usage='updatecpu [options]  app-name namespace-name',
         description='Updates the cpu size of a deployment')
         parser.add_argument('app', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
         parser.add_argument('namespace', action='store',type=str,nargs=1,help='Name of the namespace unedr which the deployment is running')
