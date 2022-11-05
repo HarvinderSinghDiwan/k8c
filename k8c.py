@@ -58,21 +58,26 @@ The available k8c commands are:
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
     def updatecpu(self):
-        parser = argparse.ArgumentParser(usage='updatecpu [options] deployment-name hostname port',
+        parser = argparse.ArgumentParser(usage='updatecpu [options] deployment-name app-name namespace-name',
         description='Updates the cpu size of a deployment')
         parser.add_argument('app', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
         parser.add_argument('namespace', action='store',type=str,nargs=1,help='Name of the namespace unedr which the deployment is running')
-        parser.add_argument('-min','--minimum-replica', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
-        parser.add_argument('-max','--maximum-replica', action='store',type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
+        parser.add_argument('-cpu','--cpu-threshold', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
+        
         args = vars(parser.parse_args(sys.argv[2:]))
-        if args['maximum_replica'] is not None and args['minimum_replica'] is not None and args['minimum_replica'][0] > args['maximum_replica'][0]:
-            logging.error("Minimum number of replica must always be less than or equal to Maximum number of replica")
+        if args['cpu_threshold'] is not None and args['cpu_threshold']['0']< 0 :
+            logging.error("CPU Threshold percentage must be greater than 0 (Zero). Please correct and try again")
             exit()
-        try:
-            res=requests.post('https://{}:{}/updatecpu'.format(H,P), args)
-            print(res.text)
-        except:
-            print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
+        if args['cpu_threshold'] is not None and args['cpu_thereshold'][0] > 100:
+            logging.error("CPU Threshold percentage must be less than 100 (Hundred). Please correct and try again")
+            exit()
+        for i in args:
+            try:
+                args.update({i:args[i][0]})
+            except:
+                pass
+        res=requests.post('https://{}:{}/updatecpu'.format(H,P), args,verify=False)
+        print(res.text)
     def updatereplica(self):
         parser = argparse.ArgumentParser(usage='updatereplica [options] deployment-name app-name namespace-name',
         description='Updates the cpu size of a deployment')
