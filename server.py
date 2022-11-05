@@ -189,16 +189,22 @@ def config():
 
 
 def updateCPUThreshold(path,values):
+    __=path.split('/')
+    if __[0] not in os.listdir():
+        return "Namespace not found. Please check your Namespace name again."
+    if __[1] not in os.listdir(__[0]+'/'):
+        return "Application not found. Please check your Application name again."
     try:
-        with open("default/frontend/hpa.yml","rb") as file:
-            data=file.read()
-            data = data.replace('targetCPUUtilizationPercentage:'.encode(), 'targetCPUUtilizationPercentage: {} #'.format().encode())
-
-        with open("default/frontend/hpa.yml","wb") as file:
-            file.write(data)
-        return True
+        with open(path+"/hpa.yml",'rb') as file:
+            yf=yaml.safe_load(file)
+            if values['cpu_threshold'] is not None:
+                yf['spec']['targetCPUUtilizationPercentage']=int(values['cpu_threshold'])
+            yf=yaml.safe_dump(yf)
+        with open(path+"/hpa.yml","wb") as file:
+            file.write(yf.encode())
+        return "True"
     except:
-        return False['minimum_replica']
+        return "Failure: Your namespce directory and application directory is there in the server, but there is no file named 'hpa.yml'. Please contact your administrator."
 def updateHPAReplicas(path,values):
     __=path.split('/')
     if __[0] not in os.listdir():
