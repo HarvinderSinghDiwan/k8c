@@ -63,12 +63,11 @@ The available k8c commands are:
         parser.add_argument('app', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
         parser.add_argument('namespace', action='store',type=str,nargs=1,help='Name of the namespace unedr which the deployment is running')
         parser.add_argument('-cpu','--cpu-threshold', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
-        
         args = vars(parser.parse_args(sys.argv[2:]))
-        if args['cpu_threshold'] is not None and args['cpu_threshold']['0']< 0 :
+        if args['cpu_threshold'] is not None and args['cpu_threshold'][0]< 0 :
             logging.error("CPU Threshold percentage must be greater than 0 (Zero). Please correct and try again")
             exit()
-        if args['cpu_threshold'] is not None and args['cpu_thereshold'][0] > 100:
+        if args['cpu_threshold'] is not None and args['cpu_threshold'][0] > 100:
             logging.error("CPU Threshold percentage must be less than 100 (Hundred). Please correct and try again")
             exit()
         for i in args:
