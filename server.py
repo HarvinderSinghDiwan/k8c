@@ -241,7 +241,8 @@ def create():
             if mkfiles(path,fdict):
                 x,y=sp.getstatusoutput("echo 'kubectl apply -f {path}/' > {path}/result.txt")
                 if x==0:
-                    return make_response(y,{'Time_taken:':start-perf_counter()})
+                    pass
+                    #return make_response(y,{'Time_taken : start-perf_counter()})
     except:
         return "Fatal Error Occured. Please contact your Developer\n"+"Time_taken:={}".format(start-perf_counter())
 @app.route('/updatecpu',methods=["POST"])
@@ -254,13 +255,13 @@ def updatecpu():
         if  res=="True":
             x,y=sp.getstatusoutput("echo 'kubectl apply -f {}/' > {}/result.txt".format(path,path))
             if x==0:
-                return y+"\nTime_taken:':{}".format(perf_counter()-start)+" nanoseconds"
+                return y+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
             else:
-                return "Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin"+"\nTime_taken:':{}".format(perf_counter()-start)+" nanoseconds" 
+                return "Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds" 
         else:
             return res
     except:
-        return "Unkown Error Occured. Please contact your Developer"+"\nTime_taken:':{}".format(perf_counter()-start)+" nanoseconds"
+        return "Unkown Error Occured. Please contact your Developer"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
 @app.route('/updatereplica',methods=["POST"])
 def updatereplica():
     start=perf_counter()
@@ -271,12 +272,12 @@ def updatereplica():
         if  res=="True":
             x,y=sp.getstatusoutput("echo 'kubectl apply -f {}/' > {}/result.txt".format(path,path))
             if x==0:
-                return y+"\nTime_taken:':{}".format(perf_counter()-start)+" nanoseconds"
+                return y+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
             else:
-                return "Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin"+"\nTime_taken:':{}".format(perf_counter()-start)+" nanoseconds" 
+                return "Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds" 
         else:
             return res
     except:
-        return "Unkown Error Occured. Please contact your Developer"+"\nTime_taken:':{}".format(perf_counter()-start)+" nanoseconds"
+        return "Unkown Error Occured. Please contact your Developer"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
 
 app.run(debug=False,host="0.0.0.0",port="5000",ssl_context="adhoc")
