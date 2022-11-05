@@ -60,17 +60,21 @@ The available k8c commands are:
     def updatecpu(self):
         parser = argparse.ArgumentParser(usage='updatecpu [options] deployment-name hostname port',
         description='Updates the cpu size of a deployment')
-        parser.add_argument('name', action='store',type=int,nargs=1,help='Name of the deployment for which cpu size is to be updated')
-
-        parser.add_argument('-cpu','--cpu-threshold', action='store',type=int,nargs=1,default=80,help='Size of the cpu in a range of 1 to 100')
-        args = parser.parse_args(sys.argv[2:])
+        parser.add_argument('app', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
+        parser.add_argument('namespace', action='store',type=str,nargs=1,help='Name of the namespace unedr which the deployment is running')
+        parser.add_argument('-min','--minimum-replica', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
+        parser.add_argument('-max','--maximum-replica', action='store',type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
+        args = vars(parser.parse_args(sys.argv[2:]))
+        if args['maximum_replica'] is not None and args['minimum_replica'] is not None and args['minimum_replica'][0] > args['maximum_replica'][0]:
+            logging.error("Minimum number of replica must always be less than or equal to Maximum number of replica")
+            exit()
         try:
             res=requests.post('https://{}:{}/updatecpu'.format(H,P), args)
             print(res.text)
         except:
             print('Oops!!! Something went wrong. Please try again rechecking your imputs.')
     def updatereplica(self):
-        parser = argparse.ArgumentParser(usage='updatereplica [options] deployment-name hostname port',
+        parser = argparse.ArgumentParser(usage='updatereplica [options] deployment-name app-name namespace-name',
         description='Updates the cpu size of a deployment')
         parser.add_argument('app', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
         parser.add_argument('namespace', action='store',type=str,nargs=1,help='Name of the namespace unedr which the deployment is running')
