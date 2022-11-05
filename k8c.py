@@ -53,7 +53,7 @@ The available k8c commands are:
         parser.add_argument('-cpu','--cpu-threshold', action='store',default=80,type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
         parser.add_argument('-min','--minimum-replica', action='store',default=3,type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
         parser.add_argument('-max','--maximum-replica', action='store',default=3,type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
-        parser.add_argument('-svc','--service-type' action='store',type=str,default='ClusterIP',choices=['ClusterIP','NodePort','LoadBalancer','Headless'],nargs=1,default=None,help='The type of the service that is to be created along with the deployment.')
+        parser.add_argument('-svc','--service-type',action='store',type=str,default='ClusterIP',choices=['ClusterIP','NodePort','LoadBalancer','Headless'],nargs=1,help='The type of the service that is to be created along with the deployment.')
         
         args = vars(parser.parse_args(sys.argv[2:]))
         if args['cpu_threshold'] is not None and args['cpu_threshold'][0]< 0 :
