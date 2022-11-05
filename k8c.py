@@ -1,4 +1,4 @@
-#!/c/ProgramData/Anaconda3/python
+#!/usr/bin/python3
 import argparse
 import sys
 import os
@@ -56,7 +56,8 @@ The available k8c commands are:
         parser.add_argument('-svc','--service-type',action='store',type=str,default='ClusterIP',choices=['ClusterIP','NodePort','LoadBalancer','Headless'],nargs=1,help='The type of the service that is to be created along with the deployment.')
         
         args = vars(parser.parse_args(sys.argv[2:]))
-        if args['cpu_threshold'] is not None and args['cpu_threshold'][0]< 0 :
+        print(args)
+        '''if args['cpu_threshold'] is not None and args['cpu_threshold'][0]< 0 :
             logging.error("CPU Threshold percentage must be greater than 0 (Zero). Please correct and try again")
             exit()
         if args['cpu_threshold'] is not None and args['cpu_threshold'][0] > 100:
@@ -68,7 +69,7 @@ The available k8c commands are:
             except:
                 pass
         res=requests.post('https://{}:{}/updatecpu'.format(H,P), args,verify=False)
-        print(res.text)
+        print(res.text)'''
     def updatecpu(self):
         parser = argparse.ArgumentParser(usage='updatecpu [options]  app-name namespace-name',
         description='Updates the cpu size of a deployment')
