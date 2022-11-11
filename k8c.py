@@ -78,8 +78,8 @@ The available k8c commands are:
             logging.error("Minimum number of replica must always be less than or equal to Maximum number of replica")
             exit()
         print(args)
-        #res=requests.post('https://{}:{}/updatecpu'.format(H,P), args,verify=False)
-        #print(res.text)''''''
+        res=requests.post('https://{}:{}/create'.format(H,P), args,verify=False)
+        print(res.text)
     def updatecpu(self):
         parser = argparse.ArgumentParser(usage='updatecpu [options]  app-name namespace-name',
         description='Updates the cpu size of a deployment')
