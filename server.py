@@ -206,24 +206,27 @@ def updateCPUThreshold(path,values):
     except:
         return "Failure: Your namespce directory and application directory is there in the server, but there is no file named 'hpa.yml'. Please contact your administrator."
 def updateHPAReplicas(path,values):
+    print(values)
     __=path.split('/')
     if __[0] not in os.listdir():
         return "Namespace not found. Please check your Namespace name again."
     if __[1] not in os.listdir(__[0]+'/'):
         return "Application not found. Please check your Application name again."
-    try:
-        with open(path+"/hpa.yml",'rb') as file:
-            yf=yaml.safe_load(file)
-            if values['maximum_replica'] is not None:
-                yf['spec']['maxReplicas']=int(values['maximum_replica'])
-            if values['minimum_replica'] is not None:
-                yf['spec']['minReplicas']=int(values['minimum_replica'])
-            yf=yaml.safe_dump(yf)
-        with open(path+"/hpa.yml","wb") as file:
-            file.write(yf.encode())
-        return "True"
-    except:
-        return "Failure: Your namespce directory and application directory is there in the server, but there is no file named 'hpa.yml'. Please contact your administrator."
+    #try:
+    print(path+"/hpa.yml")
+    with open(path+"/hpa.yml",'rb') as file:
+        print(path+"/hpa.yml")
+        yf=yaml.safe_load(file)
+        if values.get('maximum_replica') :
+            yf['spec']['maxReplicas']=int(values['maximum_replica'])
+        if values.get('minimum_replica'):
+            yf['spec']['minReplicas']=int(values['minimum_replica'])
+        yf=yaml.safe_dump(yf)
+    with open(path+"/hpa.yml","wb") as file:
+        file.write(yf.encode())
+    return "True"
+    #except:
+    #    return "Failure: Your namespce directory and application directory is there in the server, but there is no file named 'hpa.yml'. Please contact your administrator."
 ############### Application Programming Interface ######################
 from flask import Flask ,request, make_response, jsonify
 from flask_cors import CORS
@@ -269,7 +272,9 @@ def updatereplica():
     start=perf_counter()
     fdict=request.form.to_dict()
     path=fdict['namespace']+"/"+fdict['app']
+    print(fdict)
     res=updateHPAReplicas(path,fdict)
+    
     try: 
         if  res=="True":
             x,y=sp.getstatusoutput("echo 'kubectl apply -f {}/' > {}/result.txt".format(path,path))
