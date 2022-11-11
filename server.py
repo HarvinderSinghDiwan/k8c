@@ -94,11 +94,11 @@ def mkfiles(path,values):
     lcpu=None
     rcpu=None
     rmem=None
-    if values['pod_size']=="small":
+    if values['pod-size']=="small":
         lcpu='100m'
         rcpu='100m'
         rmem='200Mi'
-    elif values['pod_size']=="medium":
+    elif values['pod-size']=="medium":
         lcpu='200m'
         rcpu='200m'
         rmem='200Mi'
@@ -239,9 +239,11 @@ def create():
     try:
         if mkdir(path):
             if mkfiles(path,fdict):
-                x,y=sp.getstatusoutput("echo 'kubectl apply -f {path}/' > {path}/result.txt")
+                x,y=sp.getstatusoutput("echo 'kubectl apply -f {}/' > {}/result.txt".format(path,path))
                 if x==0:
-                    pass
+                    return "Ho gya bey"
+                else: 
+                    return "Loude lg gye"
                     #return make_response(y,{'Time_taken : start-perf_counter()})
     except:
         return "Fatal Error Occured. Please contact your Developer\n"+"Time_taken:={}".format(start-perf_counter())
