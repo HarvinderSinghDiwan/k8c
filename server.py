@@ -67,29 +67,7 @@ def mkdir(path):
     except:
         return False
 
-    with open(path+"/namespace.yml","wb") as file:
-        file.write(str(ns.format(path.split('/')[0],values.get('app'),
-        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
-    with open(path+"/namespace.yml","wb") as file:
-        file.write(str(ns.format(path.split('/')[0],values.get('app'),
-        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
-    with open(path+"/namespace.yml","wb") as file:
-        file.write(str(ns.format(path.split('/')[0],values.get('app'),
-        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
-    with open(path+"/namespace.yml","wb") as file:
-        file.write(str(ns.format(path.split('/')[0],values.get('app'),
-        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
-    with open(path+"/namespace.yml","wb") as file:
-        file.write(str(ns.format(path.split('/')[0],values.get('app'),
-        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
-    with open(path+"/namespace.yml","wb") as file:
-        file.write(str(ns.format(path.split('/')[0],values.get('app'),
-        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
-    with open(path+"/namespace.yml","wb") as file:
-        file.write(str(ns.format(path.split('/')[0],values.get('app'),
-        values.get('image'),values.get('cport'),lcpu,rcpu,rmem)).encode())
-        newvar=vars(args).update({'app':vars(args)['app'][0]})
-        print(newvar)
+
 def mkfiles(path,values):
     lcpu=None
     rcpu=None
@@ -149,44 +127,6 @@ def config():
         return True
     else:
         return '''The configuration file does not contain HOSTNAME and PORT variable.\nPlease configure you Application.'''
-    """isConfigured=config()
-    if isConfigured is True:
-        k8c()
-    else:
-        global H
-        global P
-        print("\n"*2)
-        print(isConfigured)
-        print("\n")
-        res=input("Do You Want To Configure Now? Press 'y' or 'yes' to continue else press 'n'or 'no' to EXIT :   ")
-        if res=='y' or res=='yes':
-            H=HOSTNAME=input("Please enter server's ip or fqdn . Eg: 13.26.128.30 or api.server.example.com :   ")
-            P=PORT=input("Please enter the port number of the server on the the receiver program is running. Eg: 8080 :   ")
-            with open(".k8config","wb") as file:
-                file.write(str('HOSTNAME='+HOSTNAME+"\n"+"PORT="+PORT).encode())
-            print("Configuration successful. Please proceed with ahead.")
-            k8c()
-        else:
-            exit('Thanks .......... But unless you configure, i wil not allow to to use me. Either configure using the client program or manually make entries of HOSTNAME and PORT variable in the .k8config file in the current directory.')
-
-
-
-        from flask import Flask ,request, make_response
-        from flask_cors import CORS
-        app = Flask(__name__)
-        CORS(app)
-        @app.route('/create',methods=["POST"])
-        def create():
-            
-            request.form.to_dict()
-            a=request.form.get('app')
-            print(a)
-            resp = make_response(a)
-            #resp.headers["Set-Cookie"] = "myfirstcookie=somecookievalue"
-            resp.set_cookie('userID', 'kooooooooooooooooooo')
-            return resp
-        app.run(host="0.0.0.0",port="5000",ssl_context="adhoc")"""
-
 
 def updateCPUThreshold(path,values):
     __=path.split('/')
@@ -197,7 +137,7 @@ def updateCPUThreshold(path,values):
     try:
         with open(path+"/hpa.yml",'rb') as file:
             yf=yaml.safe_load(file)
-            if values['cpu_threshold'] is not None:
+            if values.get('cpu_threshold'):
                 yf['spec']['targetCPUUtilizationPercentage']=int(values['cpu_threshold'])
             yf=yaml.safe_dump(yf)
         with open(path+"/hpa.yml","wb") as file:
@@ -212,21 +152,20 @@ def updateHPAReplicas(path,values):
         return "Namespace not found. Please check your Namespace name again."
     if __[1] not in os.listdir(__[0]+'/'):
         return "Application not found. Please check your Application name again."
-    #try:
-    print(path+"/hpa.yml")
-    with open(path+"/hpa.yml",'rb') as file:
-        print(path+"/hpa.yml")
-        yf=yaml.safe_load(file)
-        if values.get('maximum_replica') :
-            yf['spec']['maxReplicas']=int(values['maximum_replica'])
-        if values.get('minimum_replica'):
-            yf['spec']['minReplicas']=int(values['minimum_replica'])
-        yf=yaml.safe_dump(yf)
-    with open(path+"/hpa.yml","wb") as file:
-        file.write(yf.encode())
-    return "True"
-    #except:
-    #    return "Failure: Your namespce directory and application directory is there in the server, but there is no file named 'hpa.yml'. Please contact your administrator."
+    try:
+        with open(path+"/hpa.yml",'rb') as file:
+            print(path+"/hpa.yml")
+            yf=yaml.safe_load(file)
+            if values.get('maximum_replica') :
+                yf['spec']['maxReplicas']=int(values['maximum_replica'])
+            if values.get('minimum_replica'):
+                yf['spec']['minReplicas']=int(values['minimum_replica'])
+            yf=yaml.safe_dump(yf)
+        with open(path+"/hpa.yml","wb") as file:
+            file.write(yf.encode())
+        return "True"
+    except:
+        return "Failure: Your namespce directory and application directory is there in the server, but there is no file named 'hpa.yml'. Please contact your administrator."
 ############### Application Programming Interface ######################
 from flask import Flask ,request, make_response, jsonify
 from flask_cors import CORS
@@ -244,12 +183,12 @@ def create():
             if mkfiles(path,fdict):
                 x,y=sp.getstatusoutput("echo 'kubectl apply -f {}/' > {}/result.txt".format(path,path))
                 if x==0:
-                    return "Ho gya bey"
+                    return "Result: Application Creation Successful\n"+"Metadata: "+y+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
                 else: 
-                    return "Loude lg gye"
-                    #return make_response(y,{'Time_taken : start-perf_counter()})
+                    return "Result: Application Creation Failed\n"+"Description: Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
+                    
     except:
-        return "Fatal Error Occured. Please contact your Developer\n"+"Time_taken:={}".format(start-perf_counter())
+        return "Result: Failed\n Description: Fatal Error Occured. Please contact your Developer\n"+"Time_taken:={}".format(start-perf_counter())
 @app.route('/updatecpu',methods=["POST"])
 def updatecpu():
     start=perf_counter()
@@ -260,13 +199,13 @@ def updatecpu():
         if  res=="True":
             x,y=sp.getstatusoutput("echo 'kubectl apply -f {}/' > {}/result.txt".format(path,path))
             if x==0:
-                return y+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
+                return "Result: CPU Update Successful\nMetadata: "+y+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
             else:
-                return "Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds" 
+                return "Result: CPU Update Failed\n"+"Description: Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds" 
         else:
             return res
     except:
-        return "Unkown Error Occured. Please contact your Developer"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
+        return "Result: Failed\n Description: Unkown Error Occured. Please contact your Developer"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
 @app.route('/updatereplica',methods=["POST"])
 def updatereplica():
     start=perf_counter()
@@ -274,17 +213,16 @@ def updatereplica():
     path=fdict['namespace']+"/"+fdict['app']
     print(fdict)
     res=updateHPAReplicas(path,fdict)
-    
     try: 
         if  res=="True":
             x,y=sp.getstatusoutput("echo 'kubectl apply -f {}/' > {}/result.txt".format(path,path))
             if x==0:
-                return y+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
+                return "Result: Updating Replication Factor Successful\nMetadata: "+y+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
             else:
-                return "Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds" 
+                return "Result: Updating Replication Factor Failed\n"+"Description: Files created successfully, but unfortunately we failed to run 'kubectl apply -f ...' command. Please contact your admin"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds" 
         else:
             return res
     except:
-        return "Unkown Error Occured. Please contact your Developer"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
+        return "Result: Failed\n Metadata: Unkown Error Occured. Please contact your Developer"+"\nTime_taken : {}".format(perf_counter()-start)+" nanoseconds"
 
-app.run(debug=False,host="0.0.0.0",port="5000",ssl_context="adhoc")
+app.run(debug=False,host="0.0.0.0",port="5000",ssl_context="adhoc") 
