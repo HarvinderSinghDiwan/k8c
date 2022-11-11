@@ -98,6 +98,7 @@ The available k8c commands are:
                 args.update({i:args[i][0]})
             except:
                 pass
+        
         res=requests.post('https://{}:{}/updatecpu'.format(H,P), args,verify=False)
         print(res.text)
     def updatereplica(self):
@@ -108,17 +109,20 @@ The available k8c commands are:
         parser.add_argument('-min','--minimum-replica', action='store',type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
         parser.add_argument('-max','--maximum-replica', action='store',type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
         args = vars(parser.parse_args(sys.argv[2:]))
-        if (args['maximum_replica'] is not None or args['minimum_replica'] is not None) and (type(args['maximum_replica']) is not int or type(args['minimum_replica']) is not int) and (args['minimum_replica'][0] < 1 or args['maximum_replica'][0] <1) :
-            logging.error("Replica can't be zere or negative. ")
-            exit()
-        if (args['maximum_replica'] is not None and args['minimum_replica'] is not None) and (type(args['maximum_replica']) is  list and type(args['minimum_replica']) is  list) and (args['minimum_replica'][0] > args['maximum_replica'][0]):
-            logging.error("Minimum number of replica must always be less than or equal to Maximum number of replica")
-            exit()
         for i in args:
             try:
                 args.update({i:args[i][0]})
             except:
                 pass
+        if args['maximum_replica'] is not None and args['maximum_replica'] < 1 :
+            logging.error("Maximum Replica can't be zere or negative. ")
+            exit()
+        if args['minimum_replica'] is not None and args['minimum_replica'] < 1:
+            logging.error("Minimum Replica can't be zere or negative. ")
+            exit()
+        if args['minimum_replica'] is not None and args['maximum_replica'] is not None and args['minimum_replica'] > args['maximum_replica']:
+            logging.error("Minimum number of replica must always be less than or equal to Maximum number of replica")
+            exit()
         res=requests.post('https://{}:{}/updatereplica'.format(H,P), args,verify=False)
         print(res.text)
     def updatepsnr(self):
