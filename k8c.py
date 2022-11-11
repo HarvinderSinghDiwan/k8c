@@ -57,24 +57,26 @@ The available k8c commands are:
         
         args = vars(parser.parse_args(sys.argv[2:]))
         print(args)
-        print(type(args['minimum_replica']))
-        if args['cpu_threshold'] is not None and type(args['cpu_threshold']) is list and args['cpu_threshold'][0]< 0 :
-            logging.error("CPU Threshold percentage must be greater than 0 (Zero). Please correct and try again")
-            exit()
-        if args['cpu_threshold'] is not None and type(args['cpu_threshold']) is list and args['cpu_threshold'][0] > 100:
-            logging.error("CPU Threshold percentage must be less than 100 (Hundred). Please correct and try again")
-            exit()
-        if (args['maximum_replica'] is not None or args['minimum_replica'] is not None) and (type(args['maximum_replica']) is list or type(args['minimum_replica']) is list) and (args['minimum_replica'][0] < 1 or args['maximum_replica'][0] <1) :
-            logging.error("Replica can't be zere or negative. ")
-            exit()
-        if (args['maximum_replica'] is not None and args['minimum_replica'] is not None) and (type(args['maximum_replica']) is  list and type(args['minimum_replica']) is  list) and (args['minimum_replica'][0] > args['maximum_replica'][0]):
-            logging.error("Minimum number of replica must always be less than or equal to Maximum number of replica")
-            exit()
         for i in args:
             try:
                 args.update({i:args[i][0]})
             except:
                 pass
+        if args['cpu_threshold'] < 0 :
+            logging.error("CPU Threshold percentage must be greater than 0 (Zero). Please correct and try again")
+            exit()
+        if args['cpu_threshold'] > 100:
+            logging.error("CPU Threshold percentage must be less than 100 (Hundred). Please correct and try again")
+            exit()
+        if args['maximum_replica'] < 1 :
+            logging.error("Maximum Replica can't be zere or negative. ")
+            exit()
+        if args['minimum_replica'] < 1:
+            logging.error("Minimum Replica can't be zere or negative. ")
+            exit()
+        if args['minimum_replica'] > args['maximum_replica']:
+            logging.error("Minimum number of replica must always be less than or equal to Maximum number of replica")
+            exit()
         print(args)
         #res=requests.post('https://{}:{}/updatecpu'.format(H,P), args,verify=False)
         #print(res.text)''''''
