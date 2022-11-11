@@ -54,9 +54,7 @@ The available k8c commands are:
         parser.add_argument('-min','--minimum-replica', action='store',default=3,type=int,nargs=1,help='Replication number to be updated in the minimum section of the hpa')
         parser.add_argument('-max','--maximum-replica', action='store',default=3,type=int,nargs=1,help='Replication number to be updated in the maximum section of the hpa')
         parser.add_argument('-svc','--service-type',action='store',type=str,default='ClusterIP',choices=['ClusterIP','NodePort','LoadBalancer','Headless'],nargs=1,help='The type of the service that is to be created along with the deployment.')
-        
         args = vars(parser.parse_args(sys.argv[2:]))
-        print(args)
         for i in args:
             try:
                 args.update({i:args[i][0]})
@@ -77,7 +75,6 @@ The available k8c commands are:
         if args['minimum_replica'] > args['maximum_replica']:
             logging.error("Minimum number of replica must always be less than or equal to Maximum number of replica")
             exit()
-        print(args)
         res=requests.post('https://{}:{}/create'.format(H,P), args,verify=False)
         print(res.text)
     def updatecpu(self):
@@ -98,7 +95,6 @@ The available k8c commands are:
                 args.update({i:args[i][0]})
             except:
                 pass
-        
         res=requests.post('https://{}:{}/updatecpu'.format(H,P), args,verify=False)
         print(res.text)
     def updatereplica(self):
