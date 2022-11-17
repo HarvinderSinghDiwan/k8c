@@ -2,6 +2,66 @@ import subprocess as sp
 from time import sleep
 from time import perf_counter
 import json
+patch="""spec:
+    template:
+        spec:
+            containers:
+            - name: patch-demo-ctr-2
+              resources:
+                limits:
+                    cpu: 8m
+                    memory: 20Mi
+                requests:
+                    cpu: 6m
+                    memory: 10Mi"""
+deployment="""apiVersion: apps/v1
+kind: Deployment
+metadata:
+    namespace: {}
+    name: {}-deployment
+spec:
+    template:
+        metadata:
+        spec:
+            containers:
+                - name: {}
+                    image: {}
+                    imagePullPolicy: Always
+                    ports:
+                            - containerPort: {}
+                    resources:
+                    limits:
+                        cpu: {}
+                    requests:
+                        cpu: {}
+                        memory: {}
+"""
+hpa="""kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v1
+metadata:
+  name: {}-hpa
+spec:
+  maxReplicas: {}
+  minReplicas: {}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {}-deployment
+  targetCPUUtilizationPercentage: {}
+"""
+svc="""
+apiVersion: v1
+kind: Service
+metadata:
+    name: {}-service   
+spec:
+    type: {}
+    ports:
+        - port: {}
+          targetPort: {}
+          protocol: {}
+
+"""
 """ docker run --rm  skandyla/wrk -t9 -c100  -d120  -H 'Host: www.bookinfo.co.in' 'http://ec2-13-232-143-131.ap-south-1.compute.amazonaws.com:32052/productpage'
 Running 2m test @ http://ec2-13-232-143-131.ap-south-1.compute.amazonaws.com:32052/productpage"""
 
@@ -22,10 +82,10 @@ def monitor():
 
 host='ec2-13-232-143-131.ap-south-1.compute.amazonaws.com'
 port='32467'
-n=60
+n=59
 while True:
     res= monitor()
     if res > 20:
-        print("G")
+        sp.getstatusoutput("kubectl patch deployment {} --patch-file patch.yml".format(depname))
     else:
-        print("L")
+        pass
