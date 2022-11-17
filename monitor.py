@@ -2,7 +2,8 @@ import subprocess as sp
 from time import sleep
 from time import perf_counter
 import json
-
+""" docker run --rm  skandyla/wrk -t9 -c100  -d120  -H 'Host: www.bookinfo.co.in' 'http://ec2-13-232-143-131.ap-south-1.compute.amazonaws.com:32052/productpage'
+Running 2m test @ http://ec2-13-232-143-131.ap-south-1.compute.amazonaws.com:32052/productpage"""
 
 def monitor():
     start=perf_counter()
@@ -21,7 +22,7 @@ def monitor():
 
 host='ec2-13-232-143-131.ap-south-1.compute.amazonaws.com'
 port='32467'
-n=1
+n=60
 while True:
     res= monitor()
     if res > 20:
