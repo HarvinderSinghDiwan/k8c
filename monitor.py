@@ -11,10 +11,10 @@ def monitor(host,port,n):
     return "Requests/second : {}".format(int(res2) - int(res))+"\n"+"time_taken: {}".format(perf_counter()-start)
 
 
-if __name__=='main':
-    host='ec2-13-232-143-131.ap-south-1.compute.amazonaws.com'
-    port='32467'
-    n=1
-    while True:
-        res= monitor(host,port,n)
-        print(res)
+
+host='ec2-13-232-143-131.ap-south-1.compute.amazonaws.com'
+port='32467'
+n=1
+while True:
+    res= monitor(host,port,n)
+    print(res)
