@@ -83,9 +83,10 @@ def monitor():
 host='ec2-13-232-143-131.ap-south-1.compute.amazonaws.com'
 port='32467'
 n=59
+x= None
 while True:
     res= monitor()
-    if res > 20:
+    if res >= x :
         sp.getstatusoutput("kubectl patch deployment {} --patch-file patch.yml".format(depname))
-    else:
-        pass
+    elif res < x:
+        sp.getstatusoutput("kubectl patch deployment {} --patch-file patch2.yml".format(depname))
