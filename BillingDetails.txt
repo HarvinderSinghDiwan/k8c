@@ -1,0 +1,53 @@
+Date: 18-11-2022 
+Day: Friday
+    Memo: Worked on per second/minute metric fetching strategy
+    Total Working Hours: 10-12 (Including Leisure ie lunch , dinner, breaks)
+    Real Coding Work: 4 Hours
+    Research Work: 6-8 hours
+
+  Billed Hours: 4 hours
+
+Date: 19-11-2022
+Day: Saturday
+    Memo: Worked on Istio sidecar metrics and its logic to be used for our use case along with the Burst Time reactive part.
+    Total Working Hours: 14 (Including Leisure ie lunch , dinner, breaks)
+    Real Coding Work: 6 hours
+    Research: 7-8 hours
+
+  Billed Hours: 6 hours
+
+Date: 20-11-2022
+Day: Sunday
+    Memo: Worked on Burst Time reactive technique
+    Total Working hours: 9 (Including Leisure ie lunch , dinner, breaks)
+    Real Coding Work: 6 hours
+    Research: NIL
+
+  Billed Hours: 3 hours (3 Hours deducted because the code didn't work on the kubernetes environment and had to rewrite it again)
+
+Date: 21-11-2022
+Day: Monday
+    Memo: Worked on the peak time traffic handling part
+    Total Working Hours: 9-10 (Including Leisure ie lunch , dinner, breaks)
+    Real Coding Work: 4-5 hours
+    Research: 5-6 
+    
+  Billed Hours: 0 (All code that we wrote was for research purpose and after testing it was found that it didn't fulfill our requirement)
+
+Date: 22-11-2022
+Day: Tuesday
+    Memo: Worked on the peak time traffic handling part
+    Total Working Hours: 7-8 (Not including Leisure)
+    Real coding Work: 6 hours
+    Research: 1-2
+
+  Billed Hours: 3 (Coding was itself research based and took maximum time so 4 hours deducted and some hours were consumed in testing also)
+
+Date: 23-11-2022
+Day: Wednesday
+    Memo: Worked on the peak time traffic handling part
+    Total Working Hours: 14 hours (Including Leisure)
+    Real Coding Part: 8-9 hours
+    Research: Almost NIL
+
+  Billed Hours: 8 hours
