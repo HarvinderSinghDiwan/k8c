@@ -24,3 +24,31 @@ Day: Sunday
     Research: 2
 
   Billed Hours: 4 hours (3 Hours deducted because the code didn't work on the kubernetes environment and had to rewrite it again and most of the time went in researching only.)
+
+Date: 21-11-2022
+Day: Monday
+    Memo: Worked on the peak time traffic handling part
+    Total Working Hours: 12-14 (Including Leisure ie lunch , dinner, breaks)
+    Real Coding Work: 9 hours
+    Research: 2 
+    
+  Billed Hours: 4 hours (4 hours deducted because all code that we wrote was for research purpose and after testing it was found that it didn't fulfill our requirement)
+
+Date: 22-11-2022
+Day: Tuesday
+    Memo: Worked on the peak time traffic handling part
+    Total Working Hours: 12-14 (Including Leisure)
+    Real coding Work: 9 hours
+    Research: 0
+
+  Billed Hours: 9 hrs 
+
+Date: 23-11-2022
+Day: Wednesday
+    Memo: Worked on the peak time traffic handling part
+    Total Working Hours: 14 hours (Including Leisure)
+    Real Coding Part: 10 hours
+    Research: Almost NIL
+
+  Billed Hours: 10 hours
+
