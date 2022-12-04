@@ -59,56 +59,128 @@ PHASE II
 Date: 07-01-2023
 Day: Saturday
     Memo: Worked on burst (tb file) monitoring to change and optimise the algo and make it dynamic
-    Total Working Hours: 8.5 hours 
-    Real Coding Part: 8
+    Total Working Hours: 12.5 hours 
+    Real Coding Part: 11
     Research: 0
 
-  Billed Hours: 8 hours
+  Billed Hours: 11 hours
 
 Date: 08-01-2023
 Day: Sunday
     Memo: Worked on burst(tb) monitoring and k8c to make them dynamic and connect.
     Total Working Hours: 12 hours 
-    Real Coding Part: 9 hours
-    Research: 3
+    Real Coding Part: 10 hours
+    Research: 2
 
-  Billed Hours: 9 hours
+  Billed Hours: 10 hours
 
-Date: 08-01-2023
-
+Date: 09-01-2023
 Day: Monday
-    Memo: Worked on trafficburst and scheduler to make it work and dynamic.
-    Total Working Hours:  4 (traffic burst) + 12 () scheduler ) = 16 hours 
+    Memo: Worked on traffic burst and scheduler to make it work and dynamic.
+    Total Working Hours:  4 (traffic burst) + 12 ( scheduler ) = 16 hours 
     Real Coding Part: 16 hours
     Research: 0
 
   Billed Hours: 16 hours
 
-Date: 09-01-2023
+Date: 10-01-2023
 Day: Tuesday
     Memo: Worked on burst(tb) monitoring to make it work and dynamic. (Dynamic is made but a new Problem has arrosed)
-    Total Working Hours: 9 hours 
+    Total Working Hours: 14 hours 
     Real Coding Part:  hours
     Research: 0
 
-  Billed Hours: 7 hours (2 hours deducted because I tried to solve the new problem with a fidderent logic but that didn't work)
+  Billed Hours: 12 hours (2 hours deducted because I tried to solve the new problem with a fidderent logic but that didn't work)
 
-Date: 24-01-2023
-Day: Tuesday
+Date: 11-01-2023
+Day: Wednesday
+    Memo: Worked on burst(tb) continue
+    Total Working Hours: 7 hours 
+    Real Coding Part:  7 hours
+    Research: 0
+
+  Billed Hours: 7 hours 
+
+Date: 13-01-2023
+Day: Friday
+    Memo: Worked on UserAPI
+    Total Working Hours: 12 hours 
+    Real Coding Part:  12 hours
+    Research: 
+
+  Billed Hours: 12 hours 
+
+Date: 14-01-2023
+Day: Saturday
+    Memo: Worked userServer application
+    Total Working Hours: 9 hours 
+    Real Coding Part:  9 hours
+    Research: 
+
+  Billed Hours: 9 hours 
+
+Date: 16-01-2023
+Day: Monday
     Memo: Worked on UserAPI and userServer application
     Total Worked Hours: 10 hour
     Real Coding: 10 hour
     Research: 0
 
-  Billed Hours: 5 hours (5 hours deducted because code base written earlier was completely wiped off and rewritten with new logic.)
+  Billed Hours: 10 hours 
+
+Date: 18-01-2023
+Day: Wednesday
+    Memo: Worked on database models
+    Total Worked Hours: 10 hour
+    Real Coding: 10 hour
+    Research: 0
+
+  Billed Hours: 10 hours 
+
+Date: 19-01-2023
+Day: Thursday
+    Memo: Worked on database models
+    Total Worked Hours: 9 hour
+    Real Coding: 9 hour
+    Research: 0
+
+  Billed Hours: 9 hours
+
+Date: 20-01-2023
+Day: Friday
+    Memo: Worked on database event handling
+    Total Worked Hours: 12 hour
+    Real Coding: 12 hour
+    Research: 0
+
+  Billed Hours: 12 hours
+
+Date: 21-01-2023
+Day: Saturday
+    Memo: Worked on events based models
+    Total Worked Hours: 13 hour
+    Real Coding: 13 hour
+    Research: 0
+
+  Billed Hours: 13 hours
+
+Date: 22-01-2023
+Day: Sunday
+    Memo: Completed events based modeling.
+    Total Worked Hours: 14 hour
+    Real Coding: 14 hour
+    Research: 0
+
+  Billed Hours: 14 hours
+
 Date: 25,26-01-2023
 Day: Wednesday,Thursday
     Memo: Worked on database design and config
-    Total Worked Hours: 10 hour
-    Real Coding: 3 hour
-    Research: 7
+    Total Worked Hours: 13 hour
+    Real Coding: 16 hour
+    Research: 0
 
-  Billed Hours: 3 hours 
+  Billed Hours: 16 hours 
 
 Date: 27-01-2023 (Morning)
 Day: Friday
@@ -119,7 +191,7 @@ Day: Friday
 
   Billed Hours: 6.5 hours 
 
-Date: 28-01-2023 (Morning)
+Date: 28-01-2023 
 Day: Saturday 
     Memo: Worked on modifying the schworking.py to work with job persistency accommodating multiple users.
     Total Worked Hours: 14 hour
@@ -127,24 +199,6 @@ Day: Saturday
     Research: 3
 
   Billed Hours: 7 hours 
-
-Date: 29-01-2023 (Morning)
-Day: Sunday
-    Memo: Worked on modifying the schworking.py to work with job persistency accommodating multiple users.
-    Total Worked Hours: 12 hour
-    Real Coding: 12 hour
-    Research: 2
-
-  Billed Hours: 10 hours
-
-Date: 29-01-2023 (Day)
-Day: Sunday
-    Memo: Worked on modifying the schworking.py to work with job persistency accommodating multiple users.
-    Total Worked Hours: 12 hour
-    Real Coding: 9 hour
-    Research: 3 hour (Invested in Validation)
-
-  Billed Hours: 9 hours
 
 
 Day: 30-01-2023 (Morning)
@@ -154,7 +208,7 @@ Day: 30-01-2023 (Morning)
     Research: NIL
     Architecture Diagram: 2 hour
 
-  Billed Hours: 7/2 + 2/2 = 3.5 + 1 = 4.5 hour (Divided among Boosy_&_Stubborn Ahlam_Faloda and Me)
+  Billed Hours: 9 hour 
 
 Day: 31-01-2023 (Morning)
     Memo: Worked on session management server side script
@@ -162,38 +216,39 @@ Day: 31-01-2023 (Morning)
     Real Coding Hours: 9 hour
     Research: 1 hour
 
-  Billed Hours: 9 hours 
+  Billed Hours: 9 hours (1 hour removed for research)
 
 Day: 31-01-2023 (Day)
     Memo: Worked on session management server side script
-    Total Worked Hours: 7 hour
-    Real Coding Hours: 7 hour
+    Total Worked Hours: 9 hour
+    Real Coding Hours: 9 hour
     Research: Nil
 
-  Billed Hours: 7 hours
+  Billed Hours: 9 hours
 
 Day: 01-02-2023 (Day)
     Memo: Worked on datamodels and authentication server side management script
-    Total Worked Hours: 8 hour
-    Real Coding Hours: 6.5 hour
+    Total Worked Hours: 12 hour
+    Real Coding Hours: 12 hour
     Research: NIL
 
-  Billed Hours: 6.5 hours (1.5 hours deducted because mongodb troubleshooting wasted the time)
+  Billed Hours: 10.5 hours (1.5 hours deducted because mongodb troubleshooting wasted the time)
 
 Day: 02-02-2023 (Day)
     Memo: Worked on interface and authentication server side management script
-    Total Worked Hours: 8 hour
-    Real Coding Hours: 8 hour
+    Total Worked Hours: 12 hour
+    Real Coding Hours: 12 hour
     Research: NIL
 
-  Billed Hours: 8 hours 
+  Billed Hours: 12 hours 
 
 Day: 03-02-2023 (Morning)
     Memo: Worked on integrating session server, auth server and interface server
-    Total Worked hours: 9 hours
-    Real Coding Hours: 9 hours
+    Total Worked hours: 13 hours
+    Real Coding Hours: 13 hours
     Reasearch: Nil
 
-  Billed Hours: 9 hours
+  Billed Hours: 13 hours
+
 
 
