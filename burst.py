@@ -46,6 +46,20 @@ patchDec="""spec:
                 requests:
                     cpu: 50m
                     memory: 100Mi"""
+def findPort(port):
+    _,b=sp.getstatusoutput("kubectl get pods -n bi | grep product")
+    print(len(b.split("\n")))
+    a,b=sp.getstatusoutput("kubectl get svc -n bi | grep reviews")
+    res=b.split()[-2].split(',')
+    port="15090"
+    count=0
+    for i in res:
+        if i[:len(port)] == port:
+            print("found at {}".format(count))
+            break
+        count+=1
+    return res[count].split(":")[1].split("/")[0]
+
 def perMinMon():
     start=perf_counter()
     res=sp.getstatusoutput("curl localhost:32467/stats/prometheus | grep istio_requests_total | grep productpage.bookinfo.svc.cluster.local")[1].split()[43:44][0]
