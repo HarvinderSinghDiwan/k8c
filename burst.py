@@ -1,6 +1,7 @@
 import subprocess as sp
 from time import sleep
 from time import perf_counter
+import yaml
 patchInc="""spec:
     template:
         spec:
@@ -58,7 +59,27 @@ def findPort(namespace,svc,port):
             break
         count+=1
     return res[count].split(":")[1].split("/")[0]
-
+def mod(hpa,namespace):
+    _,res=sp.getstatusoutput("kubectl get hpa {} -o yaml -n {}".format(hpa,namespace))
+    resyaml=yaml.safe_load(res)
+    _=resyaml['spec']
+    _=_['metrics']
+    _=_[0]
+    _=_['resource']
+    _=_['target']
+    _=_['averageUtilization']
+    _=82
+    resyaml['spec']['metrics'][0]['resource']['target']['averageUtilization']=_
+    #resyaml['maxReplicas']=int(resyaml['maxReplicas'])*2
+    #resyaml['minReplicas']=int(resyaml['minReplicas'])*2
+    resyaml=yaml.safe_dump(resyaml)
+    with open("{}.yaml".format(hpa),"wb") as file:
+        file.write(resyaml.encode())
+    _,res=sp.getstatusoutput("kubectl apply -f {}.yaml -n {}".format(hpa,namespace))
+    if _ == 0:
+        return 0
+    else:
+        return 1  
 def perMinMon(server,port,svc,namespace,oneDuration,twoDuration,threshold):
     port=findPort(namespace,svc,port)
     start=perf_counter()
@@ -71,21 +92,20 @@ def perMinMon(server,port,svc,namespace,oneDuration,twoDuration,threshold):
         res2=res2[:-1]+'000'
     th=int(res2) - int(res)
     global switch
-    if th >= threshold:
+    if th in range(threshold-3,threshold+3):
         res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
         sleep(twoDuration)
         res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
         th2=int(res2) - int(res) 
-        if th2 >= th:
-            sp.getstatusoutput("kubectl patch deployment {} --patch-file patch.yml".format(depname))
-            switch=True
-            while switch is not False:
+        if th2 in range(threshold,100):
+            sp.getstatusoutput("kubectl patch deployment {} --patch-file patch.yml".format(deployment))
+            
+            while True:
                 res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
                 sleep(1)
                 res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
                 th3=int(res2) - int(res)
-                if th3 <= threshold:
-                    switch = False
-                    "backtoNormal"
+                if th3 in range(normal,threshold-3):
+                    #"backtoNormal"
                     break
-                else: pass
+                
