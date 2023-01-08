@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import subprocess as sp
 from time import sleep
 from time import perf_counter
@@ -6,23 +7,29 @@ import argparse
 import sys
 parser = argparse.ArgumentParser(
             description='TrafficBurst monitors the sudden traffic burst on any kubernetes native application by monitoring the request hits.',
-            usage='''tb  [<args>]
+            usage='''tb nsname svcname servername portnumber 60 85 2 5 10 1024 3 where 60,85,2,5,10,1024 and 3 are defaultUtilizationValue, 
+            scaledUtilizationValue, monitoringInterval , monitoringPeriod,
+            coolDownPeriod,thresholdValue and bandwidth respectively.
 ''')
-
-
-parser.add_argument('namespace', action='store',type=str,nargs=1,help='Name of the namespace in which application is hosted ')
-parser.add_argument('svc', action='store',type=str,nargs=1,help='Name of the service binded with the application ')
-parser.add_argument('server', action='store',type=str,nargs=1,help='URL or Domain of the server on which the application is hosted ')
-parser.add_argument('port', action='store',type=str,nargs=1,help='Port number on which the sidecar is running and serving the metrics')
-parser.add_argument('defaultUtilizationValue', action='store',type=str,nargs=1,help='The default resource percentage for normal traffic rates')
-parser.add_argument('scaledUtilizationValue', action='store',type=str,nargs=1,help='The scaled resource percentage for bursted trafic rates')
-parser.add_argument('monitoringInterval', action='store',type=str,nargs=1,help='The time interval between which bursting is to be monitored in sec/min/hour')
-parser.add_argument('monitoringPeriod', action='store',type=str,nargs=1,help='The time interval between which the bursting is to be declared in sec/min/hour')
-parser.add_argument('coolDownPeriod', action='store',type=str,nargs=1,help='The time interval between scale down should is to be declared in sec/min/hour')
-parser.add_argument('thresholdValue', action='store',type=str,nargs=1,help='The threshold value of the traffic per sec/min/hour')
-parser.add_argument('bandwidth', action='store',type=str,nargs=1,help='The min and max range near the threshold value')
-args = parser.parse_args(sys.argv[1:2])
+parser.add_argument('ns', action='store',type=str,nargs=1,help='Namespace : Name of the namespace in which application is hosted ')
+parser.add_argument('svc', action='store',type=str,nargs=1,help='Service : Name of the service binded with the application ')
+parser.add_argument('host', action='store',type=str,nargs=1,help='URL or Domain of the server on which the application is hosted ')
+parser.add_argument('port', action='store',type=int,nargs=1,help='Port number on which the sidecar is running and serving the metrics')
+parser.add_argument('duv', action='store',type=int,nargs=1,help='defaultUtilizationValue : The default resource percentage for normal traffic rates')
+parser.add_argument('suv', action='store',type=int,nargs=1,help='scaledUtilizationValue : The scaled resource percentage for bursted trafic rates')
+parser.add_argument('mi', action='store',type=int,nargs=1,help='monitoringInterval : The time interval between which bursting is to be monitored in sec/min/hour')
+parser.add_argument('mp', action='store',type=int,nargs=1,help='monitoringPeriod : The time interval between which the bursting is to be declared in sec/min/hour')
+parser.add_argument('cp', action='store',type=int,nargs=1,help='coolDownPeriod : The time interval between scale down should is to be declared in sec/min/hour')
+parser.add_argument('tv', action='store',type=int,nargs=1,help='thresholdValue : The threshold value of the traffic per sec/min/hour')
+parser.add_argument('bd', action='store',type=int,nargs=1,help='bandwidth : The min and max range near the threshold value')
+args = vars(parser.parse_args(sys.argv[1:]))
 print(args)
+for i in args:
+  try:
+      args.update({i:args[i][0]})
+  except:
+      pass
+#for i in range(len(args)):
 def findPort(namespace,svc,port):
     _,b=sp.getstatusoutput("kubectl get pods -n {} | grep {}".format(namespace,svc))
     print(len(b.split("\n")))
@@ -177,11 +184,11 @@ def modValidation(hpa,namespace):
         return 0
     else:
         return 1  
-def monitorBurstTraffic(server,port,svc,namespace,monitoringInterval,monitoringPeriod,coolDownPeriod,thresholdValue,bandwidth,scaledUtilizationValue,defaultUtilizationValue):
-    port=findPort(namespace,svc,port)
-    _,b=sp.getstatusoutput("kubectl get pods -n {} | grep {}".format(namespace,svc))
+def monitorBurstTraffic(args):
+    port=findPort(args['ns'],args['svc'],args['port'])
+    _,b=sp.getstatusoutput("kubectl get pods -n {} | grep {}".format(args['ns'],args['svc']))
     print(len(b.split("\n")))
-    a,b=sp.getstatusoutput("kubectl get svc -n {} | grep {}".format(namespace,svc))
+    a,b=sp.getstatusoutput("kubectl get svc -n {} | grep {}".format(args['ns'],args['svc']))
     res=b.split()[-2].split(',')
     count=0
     for i in res:
@@ -190,11 +197,12 @@ def monitorBurstTraffic(server,port,svc,namespace,monitoringInterval,monitoringP
             break
         count+=1
     port=res[count].split(":")[1].split("/")[0]
+    args.update({'port':port})
     #start=perf_counter()
     while True:
-        res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
+        res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(args['host'],args['port'],args['svc'],args['ns']))[1].split()[43:44][0]
         sleep(monitoringInterval)
-        res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
+        res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(args['host'],args['port'],svc,namespace))[1].split()[43:44][0]
         if 'k' in res[-1]:
             res=res[:-1]+'000'
         if 'k' in res2[-1]:
@@ -256,7 +264,7 @@ def monitorBurstTraffic(server,port,svc,namespace,monitoringInterval,monitoringP
                                 raise Exception("Error Error Error")
                             break    
 
-if __name__ == "main":
+"""if __name__ == "main":
     server="localhost"
     port=9080
     svc="productpage"
@@ -268,20 +276,7 @@ if __name__ == "main":
     bandwidth=3
     defaultUtilizationValue=60
     scaledUtilizationValue=80
-    parser = argparse.ArgumentParser(
-            description='K8 client which manipulates your cluster reources',
-            usage='''k8c <command> [<args>]
 
-The available k8c commands are:
-   create               Creates a new deployment
-   updatecpu            Updates the cpu size of any deployment
-   updatereplica        Updates the number of replication of any deployment 
-   updatepcpu           Updates the pod cpu based on requests per second traffic
-   updatepsnr	        Updates the pos size and pod replica based on requests per second traffic
-''')
-    parser.add_argument('command', help='Subcommand to run')
-    args = parser.parse_args(sys.argv[1:2])
-    print(args)
     #monitorBurstTraffic(server,port,svc,namespace,monitoringInterval,monitoringPeriod,coolDownPeriod,thresholdValue,bandwidth,scaledUtilizationValue,defaultUtilizationValue)
 
-                
+            """    
