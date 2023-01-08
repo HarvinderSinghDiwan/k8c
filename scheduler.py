@@ -10,7 +10,34 @@ import subprocess as sp
 import yaml
 from math import ceil
 from apscheduler.schedulers.background import BackgroundScheduler
+from __future__ import absolute_import
+import sys
 
+from apscheduler.executors.base import BaseExecutor, run_job
+
+
+try:
+    import gevent
+except ImportError:  # pragma: nocover
+    pass
+
+class GeventExecutor(BaseExecutor):
+    """
+    Runs jobs as greenlets.
+    Plugin alias: ``gevent``
+    """
+
+    def _do_submit_job(self, job, run_times):
+        def callback(greenlet):
+            try:
+                events = greenlet.get()
+            except BaseException:
+                self._run_job_error(job.id, *sys.exc_info()[1:])
+            else:
+                self._run_job_success(job.id, events)
+
+        gevent.spawn(run_job, job, job._jobstore_alias, run_times, self._logger.name).\
+            link(callback)
 class BackgroundScheduler(BlockingScheduler):
     """
     A scheduler that runs in the background using a separate thread
