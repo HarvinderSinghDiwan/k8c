@@ -32,7 +32,7 @@ The available k8c commands are:
    updatecpu            Updates the cpu size of any deployment
    updatereplica        Updates the number of replication of any deployment 
    updatepcpu           Updates the pod cpu based on requests per second traffic
-   updatepsnr	        Updates the pos size and pod replica based on requests per seconf traffic
+   updatepsnr	        Updates the pos size and pod replica based on requests per second traffic
 ''')
         parser.add_argument('command', help='Subcommand to run')
         args = parser.parse_args(sys.argv[1:2])
@@ -98,7 +98,7 @@ The available k8c commands are:
         res=requests.post('https://{}:{}/updatecpu'.format(H,P), args,verify=False)
         print(res.text)
     def updatereplica(self):
-        parser = argparse.ArgumentParser(usage='updatereplica [options] deployment-name app-name namespace-name',
+        parser = argparse.ArgumentParser(usage='updatereplica [options]  app-name namespace-name',
         description='Updates the cpu size of a deployment')
         parser.add_argument('app', action='store',type=str,nargs=1,help='Name of the deployment for which replica size is to be updated')
         parser.add_argument('namespace', action='store',type=str,nargs=1,help='Name of the namespace unedr which the deployment is running')
