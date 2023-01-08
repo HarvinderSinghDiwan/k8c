@@ -1,3 +1,5 @@
+PHASE I
+
 Date: 18-11-2022 
 Day: Friday
     Memo: Worked on per second/minute metric fetching strategy
@@ -52,3 +54,22 @@ Day: Wednesday
 
   Billed Hours: 10 hours
 
+PHASE II
+
+Date: 07-01-2023
+Day: Saturday
+    Memo: Worked on burst (tb file) monitoring to change and optimise the algo and make it dynamic
+    Total Working Hours: 8.5 hours 
+    Real Coding Part: 8
+    Research: 0
+
+  Billed Hours: 8 hours
+
+Date: 08-01-2023
+Day: Sunday
+    Memo: Worked on burst(tb) monitoring and k8c to make them dynamic and connect.
+    Total Working Hours: 12 hours (Including Leisure)
+    Real Coding Part: 9 hours
+    Research: 3
+
+  Billed Hours: 9 hours
