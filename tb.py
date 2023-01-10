@@ -264,7 +264,7 @@ def monitorBurstTraffic(args):
                                 raise Exception("Error Error Error")
                             break    
 
-"""if __name__ == "main":
+if __name__ == "main":
     server="localhost"
     port=9080
     svc="productpage"
@@ -279,4 +279,4 @@ def monitorBurstTraffic(args):
 
     #monitorBurstTraffic(server,port,svc,namespace,monitoringInterval,monitoringPeriod,coolDownPeriod,thresholdValue,bandwidth,scaledUtilizationValue,defaultUtilizationValue)
 
-            """    
+         
