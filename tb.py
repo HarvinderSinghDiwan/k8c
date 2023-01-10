@@ -186,5 +186,8 @@ def monitorBurstTraffic(args,host,port):
                             _,res=sp.getstatusoutput("kubectl apply -f {}.yaml -n {}".format(args['hpa'],args['ns']))
                             if _ != 0:
                                 raise Exception("Error Error Error")
-                            break   
+                            break
+
+
+        
 monitorBurstTraffic(args,host,port)
