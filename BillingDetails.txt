@@ -68,8 +68,27 @@ Day: Saturday
 Date: 08-01-2023
 Day: Sunday
     Memo: Worked on burst(tb) monitoring and k8c to make them dynamic and connect.
-    Total Working Hours: 12 hours (Including Leisure)
+    Total Working Hours: 12 hours 
     Real Coding Part: 9 hours
     Research: 3
 
   Billed Hours: 9 hours
+
+Date: 08-01-2023
+
+Day: Monday
+    Memo: Worked on trafficburst and scheduler to make it work and dynamic.
+    Total Working Hours:  4 (traffic burst) + 12 () scheduler ) = 16 hours 
+    Real Coding Part: 16 hours
+    Research: 0
+
+  Billed Hours: 16 hours
+
+  Date: 08-01-2023
+Day: Tuesday
+    Memo: Worked on burst(tb) monitoring to make it work and dynamic. (Dynamic is made but a new Problem has arrosed)
+    Total Working Hours: 9 hours 
+    Real Coding Part:  hours
+    Research: 0
+
+  Billed Hours: 7 hours (2 hours deducted because I tried to solve the new problem with a fidderent logic but that didn't work)
