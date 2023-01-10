@@ -81,7 +81,7 @@ def monitorBurstTraffic(args,host,port):
             res2=res2[:-1]+'000'
         _thresh=int(res2) - int(res)
         global switch
-        if _thresh in range(int(args['tv'])-int(args['bd']),int(args['tv'])+int(args['bd'])):
+        if _thresh in range(int(args['tv'])-int(args['bd']),int(args['tv'])+int(args['bd'])) or _thresh > int(args['tv'])+int(args['bd']):
             res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
             sleep(args['mp'])
             res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
@@ -90,7 +90,7 @@ def monitorBurstTraffic(args,host,port):
             if 'k' in res2[-1]:
                 res2=res2[:-1]+'000'
             __thresh=int(res2) - int(res) 
-            if __thresh in range(int(args['tv'])+int(args['bd']),100):
+            if __thresh > int(args['tv'])+int(args['bd']):
                 _,res=sp.getstatusoutput("kubectl get hpa {} -o yaml -n {}".format(args['hpa'],args['ns']))
                 resyaml=yaml.safe_load(res)
                 _=resyaml['spec']
@@ -113,8 +113,12 @@ def monitorBurstTraffic(args,host,port):
                     res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
                     sleep(args['mp'])
                     res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
+                    if 'k' in res[-1]:
+                        res=res[:-1]+'000'
+                    if 'k' in res2[-1]:
+                        res2=res2[:-1]+'000'
                     ___thresh=int(res2) - int(res)
-                    if ___thresh in range(0,int(args['tv'])-int(args['bd'])):
+                    if ___thresh in range(0,int(args['tv'])-int(args['bd'])) or  ___thresh in range(0,int(args['tv'])+int(args['bd'])):
                         res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
                         sleep(args['cp'])
                         res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
@@ -123,7 +127,7 @@ def monitorBurstTraffic(args,host,port):
                         if 'k' in res2[-1]:
                             res2=res2[:-1]+'000'
                         ____thresh=int(res2) - int(res)
-                        if ____thresh in range(0,int(args['tv'])-int(args['bd'])):
+                        if ____thresh in range(0,int(args['tv'])-int(args['bd'])) or  ____thresh in range(0,int(args['tv'])+int(args['bd'])):
                             _,res=sp.getstatusoutput("kubectl get hpa {} -o yaml -n {}".format(args['hpa'],args['ns']))
                             resyaml=yaml.safe_load(res)
                             _=resyaml['spec']
