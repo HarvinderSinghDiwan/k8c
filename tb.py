@@ -4,7 +4,7 @@ import yaml
 import argparse
 import sys
 """
-Example: python3 tb.py bi productpage productpage-v1 productpage-v1 11 5 2 4 10 20 3
+Example: python3 tb.py bi productpage productpage-v1 productpage-v1 11 5 2 4 10 700 3
 """
 parser = argparse.ArgumentParser(
             description='TrafficBurst monitors the sudden traffic burst on any kubernetes native application by monitoring the request hits.',
@@ -81,7 +81,8 @@ def monitorBurstTraffic(args,host,port):
             res2=res2[:-1]+'000'
         _thresh=int(res2) - int(res)
         global switch
-        if _thresh in range(int(args['tv'])-int(args['bd']),int(args['tv'])+int(args['bd'])) or _thresh > int(args['tv'])+int(args['bd']):
+        if _thresh >= int(args['tv']) :
+            print("if checked and passsed")
             res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
             sleep(args['mp'])
             res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
