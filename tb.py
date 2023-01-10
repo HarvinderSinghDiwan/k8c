@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import subprocess as sp
 from time import sleep
-from time import perf_counter
 import yaml
 import argparse
 import sys
@@ -64,9 +63,9 @@ def monitorBurstTraffic(args):
     args.update({'port':port})
     #start=perf_counter()
     while True:
-        res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(args['host'],args['port'],args['svc'],args['ns']))[1].split()[43:44][0]
+        res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
         sleep(monitoringInterval)
-        res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(args['host'],args['port'],svc,namespace))[1].split()[43:44][0]
+        res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
         if 'k' in res[-1]:
             res=res[:-1]+'000'
         if 'k' in res2[-1]:
@@ -74,12 +73,12 @@ def monitorBurstTraffic(args):
         _thresh=int(res2) - int(res)
         global switch
         if _thresh in range(thresholdValue-bandwidth,thresholdValue+bandwidth):
-            res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
+            res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
             sleep(monitoringPeriod)
-            res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
+            res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
             __thresh=int(res2) - int(res) 
             if __thresh in range(thresholdValue+bandwidth,100):
-                _,res=sp.getstatusoutput("kubectl get hpa {} -o yaml -n {}".format(hpa,namespace))
+                _,res=sp.getstatusoutput("kubectl get hpa {} -o yaml -n {}".format(args['hpa'],args['ns']))
                 resyaml=yaml.safe_load(res)
                 _=resyaml['spec']
                 _=_['metrics']
@@ -94,21 +93,21 @@ def monitorBurstTraffic(args):
                 resyaml=yaml.safe_dump(resyaml)
                 with open("{}.yaml".format(hpa),"wb") as file:
                     file.write(resyaml.encode())
-                _,res=sp.getstatusoutput("kubectl apply -f {}.yaml -n {}".format(hpa,namespace))
+                _,res=sp.getstatusoutput("kubectl apply -f {}.yaml -n {}".format(args['hpa'],args['ns']))
                 if _ != 0:
                     raise Exception("Error Error Error")
                 while True:
-                    res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
+                    res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
                     sleep(monitoringPeriod)
-                    res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
+                    res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
                     ___thresh=int(res2) - int(res)
                     if ___thresh in range(0,thresholdValue-bandwidth):
-                        res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
+                        res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
                         sleep(coolDownPeriod)
-                        res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(server,port,svc,namespace))[1].split()[43:44][0]
+                        res2=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(host,port,args['svc'],args['ns']))[1].split()[43:44][0]
                         ____thresh=int(res2) - int(res)
                         if ____thresh in range(0,thresholdValue-bandwidth):
-                            _,res=sp.getstatusoutput("kubectl get hpa {} -o yaml -n {}".format(hpa,namespace))
+                            _,res=sp.getstatusoutput("kubectl get hpa {} -o yaml -n {}".format(args['hpa'],args['ns']))
                             resyaml=yaml.safe_load(res)
                             _=resyaml['spec']
                             _=_['metrics']
@@ -116,31 +115,15 @@ def monitorBurstTraffic(args):
                             _=_['resource']
                             _=_['target']
                             _=_['averageUtilization']
-                            _=defaultUtilizationValue
+                            _=_['defaultUtilizationValue']
                             resyaml['spec']['metrics'][0]['resource']['target']['averageUtilization']=_
                             #resyaml['maxReplicas']=int(resyaml['maxReplicas'])*2
                             #resyaml['minReplicas']=int(resyaml['minReplicas'])*2
                             resyaml=yaml.safe_dump(resyaml)
                             with open("{}.yaml".format(hpa),"wb") as file:
                                 file.write(resyaml.encode())
-                            _,res=sp.getstatusoutput("kubectl apply -f {}.yaml -n {}".format(hpa,namespace))
+                            _,res=sp.getstatusoutput("kubectl apply -f {}.yaml -n {}".format(args['hpa'],args['ns']))
                             if _ != 0:
                                 raise Exception("Error Error Error")
                             break    
 
-if __name__ == "main":
-    server="localhost"
-    port=9080
-    svc="productpage"
-    namespace="bi"
-    monitoringInterval=2
-    monitoringPeriod=4
-    coolDownPeriod=10
-    thresholdValue=108
-    bandwidth=3
-    defaultUtilizationValue=60
-    scaledUtilizationValue=80
-
-    #monitorBurstTraffic(server,port,svc,namespace,monitoringInterval,monitoringPeriod,coolDownPeriod,thresholdValue,bandwidth,scaledUtilizationValue,defaultUtilizationValue)
-
-         
