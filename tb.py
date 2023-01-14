@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import subprocess as sp
 from time import sleep
 import time
@@ -45,10 +46,14 @@ def rateTraffic(ns,deployment,svc,port):
     for i,j in enumerate(_):
         l.append(j.split())
         ip.append(l[i][7])
-        res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(ip[i],port,svc,ns))[1].split()[43:44][0]
-        if 'k' in res[-1]:
-            res=res[:-1]+'000'
-        rate+=int(res)
+        try:
+            res=sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(ip[i],port,svc,ns))[1].split()[43:44][0]
+            
+            if 'k' in res[-1]:
+                res=res[:-1]+'000'
+            rate+=int(res)
+        except:
+            pass
     return rate
 def getTraffic(ns,deployment,svc,port):
     _,res=sp.getstatusoutput("kubectl get pods -n {} -o wide | grep {}".format(ns,deployment))
@@ -97,10 +102,22 @@ def findPort(namespace,svc,port):
         count+=1
     return int(res[count].split(":")[1].split("/")[0])
 
-def monitorBurstTraffic(args,port):
-    port=findPort(ns,svc,port)
+def monitorBurstTraffic():
+    host="localhost"
+    port=15090
+    ns=args['ns']
+    svc=args['svc']
+    hpa=args['hpa']
+    deployment=args['deployment']
+    duv=args['duv']
+    suv=args['suv']
+    mi=args['mi']
+    mp=args['mp']
+    cp=args['cp']
+    tv=args['tv']
+    #port=findPort(ns,svc,port)
     _,b=sp.getstatusoutput("kubectl get pods -n {} | grep {}".format(ns,svc))
-    args.update({'port':port})
+    #args.update({'port':port})
     #start=perf_counter()
     while True:
         res=rateTraffic(ns,deployment,svc,port)
@@ -139,11 +156,13 @@ def monitorBurstTraffic(args,port):
                     res2=rateTraffic(ns,deployment,svc,port)
                     ___thresh=int(res2) - int(res)
                     if ___thresh < int(tv):
+                        print("Monitoring the cooldown stage")
                         res=rateTraffic(ns,deployment,svc,port)
                         sleep(cp)
                         res2=rateTraffic(ns,deployment,svc,port)
                         ____thresh=int(res2) - int(res)
                         if ____thresh < int(tv):
+                            print("Reverted")
                             _,res=sp.getstatusoutput("kubectl get hpa {} -o yaml -n {}".format(hpa,ns))
                             resyaml=yaml.safe_load(res)
                             _=resyaml['spec']
@@ -163,6 +182,7 @@ def monitorBurstTraffic(args,port):
                             if _ != 0:
                                 raise Exception("Error Error Error")
                             break
+                    #else: break
 
 
-monitorBurstTraffic(args,host,port)
+monitorBurstTraffic()
