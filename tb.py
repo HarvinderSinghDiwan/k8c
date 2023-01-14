@@ -14,6 +14,25 @@ parser = argparse.ArgumentParser(
 ''')
 host="localhost"
 port=15090
+def getTraffic(ns,deployment,svc,port):
+    _,res=sp.getstatusoutput("kubectl get pods -n {} -o wide | grep {}".format(ns,deployment))
+    _=res.split("\n")
+    #print(len(_))
+    #s=
+    l=[]
+    for i in _:
+        l.append(i.split())
+    #print(l)
+    ip=[]
+    for i in range(len(l)):
+        x=l[i][7]
+        ip.append(x)
+    #print(ip)
+    #import time
+    rate=0
+    for i in ip:
+        rate+=int(sp.getstatusoutput("curl {}:{}/stats/prometheus | grep istio_requests_total | grep {}.{}.svc.cluster.local".format(i,port,svc,ns))[1].split()[43:44][0])
+    return rate
 parser.add_argument('ns', action='store',type=str,nargs=1,help='Namespace : Name of the namespace in which application is hosted ')
 parser.add_argument('svc', action='store',type=str,nargs=1,help='Service : Name of the service binded with the application ')
 parser.add_argument('hpa', action='store',type=str,nargs=1,help='HorizontalPodAutoscaler : Name of the hpa binded with the application ')
@@ -187,6 +206,8 @@ def monitorBurstTraffic(args,host,port):
                             if _ != 0:
                                 raise Exception("Error Error Error")
                             break
+
+                        
 
 
         
