@@ -84,7 +84,7 @@ Day: Monday
 
   Billed Hours: 16 hours
 
-  Date: 08-01-2023
+Date: 09-01-2023
 Day: Tuesday
     Memo: Worked on burst(tb) monitoring to make it work and dynamic. (Dynamic is made but a new Problem has arrosed)
     Total Working Hours: 9 hours 
@@ -92,3 +92,12 @@ Day: Tuesday
     Research: 0
 
   Billed Hours: 7 hours (2 hours deducted because I tried to solve the new problem with a fidderent logic but that didn't work)
+
+Date: 24-01-2023
+Day: Tuesday
+    Memo: Worked on UserAPI and userServer application
+    Total Worked Hours: 10 hour
+    Real Coding: 10 hour
+    Research: 0
+
+  Billed Hours: 5 hours (5 hours deducted because code base written earlier was completely wiped off and rewritten with new logic.)
