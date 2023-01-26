@@ -101,3 +101,20 @@ Day: Tuesday
     Research: 0
 
   Billed Hours: 5 hours (5 hours deducted because code base written earlier was completely wiped off and rewritten with new logic.)
+Date: 25,26-01-2023
+Day: Wednesday,Thursday
+    Memo: Worked on database design and config
+    Total Worked Hours: 10 hour
+    Real Coding: 3 hour
+    Research: 7
+
+  Billed Hours: 3 hours 
+
+Date: 27-01-2023 (Morning)
+Day: Friday
+    Memo: Worked on modifying the schworking.py to send notiffication to notification server
+    Total Worked Hours: 10 hour
+    Real Coding: 6.5 hour
+    Research: 0
+
+  Billed Hours: 6.5 hours 
