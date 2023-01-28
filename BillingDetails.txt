@@ -118,3 +118,21 @@ Day: Friday
     Research: 0
 
   Billed Hours: 6.5 hours 
+
+Date: 28-01-2023 (Morning)
+Day: Saturday 
+    Memo: Worked on modifying the schworking.py to work with job persistency accommodating multiple users.
+    Total Worked Hours: 14 hour
+    Real Coding: 10 hour
+    Research: 3
+
+  Billed Hours: 7 hours 
+
+Date: 29-01-2023 (Morning)
+Day: Sunday
+    Memo: Worked on modifying the schworking.py to work with job persistency accommodating multiple users.
+    Total Worked Hours: 12 hour
+    Real Coding: 12 hour
+    Research: 2
+
+  Billed Hours: 10 hours
