@@ -136,3 +136,22 @@ Day: Sunday
     Research: 2
 
   Billed Hours: 10 hours
+
+Date: 29-01-2023 (Day)
+Day: Sunday
+    Memo: Worked on modifying the schworking.py to work with job persistency accommodating multiple users.
+    Total Worked Hours: 12 hour
+    Real Coding: 9 hour
+    Research: 3 hour (Invested in Validation)
+
+  Billed Hours: 9 hours
+
+Date: 30-01-2023
+Day: 30-01-2023
+    Memo: Worked on userapi (client) side program.
+    Total Worked Hours: 9 hour
+    Real Coding: 7 hour
+    Research: NIL
+    Architecture Diagram: 2 hour
+
+  Billed Hours: 7/2 + 2/2 = 3.5 + 1 = 4.5 hour (Divided among Boosy_&_Stubborn Ahlam_Faloda and Me)
