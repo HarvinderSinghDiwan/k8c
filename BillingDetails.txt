@@ -119,15 +119,6 @@ Day: Saturday
 
   Billed Hours: 9 hours 
 
-Date: 16-01-2023
-Day: Monday
-    Memo: Worked on UserAPI and userServer application
-    Total Worked Hours: 10 hour
-    Real Coding: 10 hour
-    Research: 0
-
-  Billed Hours: 10 hours 
-
 Date: 18-01-2023
 Day: Wednesday
     Memo: Worked on database models
