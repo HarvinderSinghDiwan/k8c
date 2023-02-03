@@ -158,11 +158,11 @@ Day: 30-01-2023 (Morning)
 
 Day: 31-01-2023 (Morning)
     Memo: Worked on session management server side script
-    Total Worked Hours: 7 hour
-    Real Coding Hours: 6 hour
+    Total Worked Hours: 10 hour
+    Real Coding Hours: 9 hour
     Research: 1 hour
 
-  Billed Hours: 6 hours 
+  Billed Hours: 9 hours 
 
 Day: 31-01-2023 (Day)
     Memo: Worked on session management server side script
@@ -190,10 +190,10 @@ Day: 02-02-2023 (Day)
 
 Day: 03-02-2023 (Morning)
     Memo: Worked on integrating session server, auth server and interface server
-    Total Worked hours: 4 hours
-    Real Coding Hours: 4 hours
+    Total Worked hours: 9 hours
+    Real Coding Hours: 9 hours
     Reasearch: Nil
 
-  Billed Hours: 4 hours
+  Billed Hours: 9 hours
 
 
