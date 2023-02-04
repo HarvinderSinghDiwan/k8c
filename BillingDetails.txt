@@ -146,8 +146,8 @@ Day: Sunday
 
   Billed Hours: 9 hours
 
-Date: 30-01-2023
-Day: 30-01-2023
+
+Day: 30-01-2023 (Morning)
     Memo: Worked on userapi (client) side program.
     Total Worked Hours: 9 hour
     Real Coding: 7 hour
@@ -155,3 +155,45 @@ Day: 30-01-2023
     Architecture Diagram: 2 hour
 
   Billed Hours: 7/2 + 2/2 = 3.5 + 1 = 4.5 hour (Divided among Boosy_&_Stubborn Ahlam_Faloda and Me)
+
+Day: 31-01-2023 (Morning)
+    Memo: Worked on session management server side script
+    Total Worked Hours: 7 hour
+    Real Coding Hours: 6 hour
+    Research: 1 hour
+
+  Billed Hours: 6 hours 
+
+Day: 31-01-2023 (Day)
+    Memo: Worked on session management server side script
+    Total Worked Hours: 7 hour
+    Real Coding Hours: 7 hour
+    Research: Nil
+
+  Billed Hours: 7 hours
+
+Day: 01-02-2023 (Day)
+    Memo: Worked on datamodels and authentication server side management script
+    Total Worked Hours: 8 hour
+    Real Coding Hours: 6.5 hour
+    Research: NIL
+
+  Billed Hours: 6.5 hours (1.5 hours deducted because mongodb troubleshooting wasted the time)
+
+Day: 02-02-2023 (Day)
+    Memo: Worked on interface and authentication server side management script
+    Total Worked Hours: 8 hour
+    Real Coding Hours: 8 hour
+    Research: NIL
+
+  Billed Hours: 8 hours 
+
+Day: 03-02-2023 (Morning)
+    Memo: Worked on integrating session server, auth server and interface server
+    Total Worked hours: 4 hours
+    Real Coding Hours: 4 hours
+    Reasearch: Nil
+
+  Billed Hours: 4 hours
+
+
